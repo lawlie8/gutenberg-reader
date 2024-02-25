@@ -8,9 +8,7 @@ import java.net.URLConnection;
 public class GutenbergResourceService {
 
     public boolean fetchDailyRDFFiles(){
-        URLConnection connection = source.openConnection();
-        connection.setConnectTimeout(connectionTimeout);
-        connection.setReadTimeout(25000);
+
         return true;
     }
 

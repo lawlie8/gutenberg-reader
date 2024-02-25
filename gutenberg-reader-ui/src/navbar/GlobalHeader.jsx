@@ -36,14 +36,11 @@ export default function GlobalHeader() {
                 onClick={({key}) => navigate(key)}
                 >
             </Menu>
-            <GutenBergRoute />
         </div>
     );
 
     
 }
-
-
 
 
 function getNavBarItems() {
