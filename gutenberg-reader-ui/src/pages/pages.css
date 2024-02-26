@@ -1,4 +1,6 @@
 .main-login {
+    height: 240px;
+    width: 270px;
     position: absolute;
     top: 45%;
     left:50%;
@@ -6,6 +8,9 @@
     transform: translate(-50%,-50%);
     border: 1px solid #001529;
     padding: 40px 10px 10px 10px;
-    border-radius: 15px 50px 30px;
-    background-color: #001529;
+    border-radius: 15px ;
+    background-color: #001529   ;
+    opacity:1;
+    align-items: center;
 }
+
