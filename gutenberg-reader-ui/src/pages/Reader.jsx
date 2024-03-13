@@ -1,5 +1,6 @@
 export default function Reader(){
 
+    
     const globalReaderStyle = {
         height : 'calc(100%)',
         width : 'calc(100%)',

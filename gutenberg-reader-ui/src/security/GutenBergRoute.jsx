@@ -4,7 +4,6 @@ import Categories from "../pages/Categories";
 import RecentBooks from "../pages/RecentBooks";
 import Login from "../pages/Login";
 export default function GutenBergRoute(path = {path}){
-    console.log(path);
     return(
         <Routes>
             <Route path="/reader" element={<Reader />}></Route>

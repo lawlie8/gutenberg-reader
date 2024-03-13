@@ -1,6 +1,7 @@
 import Layout from "antd/es/layout/layout";
 import React, { useState, useEffect, version } from 'react';
 import { Footer } from "antd/es/layout/layout";
+import {END_GET_APPLICATION_PROPERTIES} from "../constants";
 
 const footerStyle = {
     textAlign: 'center',
@@ -16,8 +17,6 @@ const footerStyle = {
   };
   
 export default function GlobalFooter() {
-
-
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -26,7 +25,7 @@ export default function GlobalFooter() {
       const fetchData = async () => {
         setIsLoading(true);
         try {
-          const response = await fetch('http://localhost:8090/application/properties/version');
+          const response = await fetch("http://localhost:8090/web/application/properties/version");
           if (!response.ok) {
             throw new Error('Failed to fetch data');
           }

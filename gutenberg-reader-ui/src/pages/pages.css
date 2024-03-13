@@ -14,3 +14,10 @@
     align-items: center;
 }
 
+.global-alert{
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 200px;
+    border-radius: 0%;
+}
