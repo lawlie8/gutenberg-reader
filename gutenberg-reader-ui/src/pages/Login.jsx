@@ -22,30 +22,52 @@ const globalReaderStyle = {
 
 export default function Login(){
 
-
-
     const navigate = useNavigate();
     const [formFlag,setFormFlag] = React.useState(false);
     const [loginState,setState] = React.useState('0');
+    const [api, contextHolder] = notification.useNotification();
+
+        useEffect(()=>{
+            api['error']({
+                message: 'Notification Title',
+                description:
+                  'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+              });
+        },[formFlag]);
+    
+
 
     function AuthenticateUser(values){
         setFormFlag(false);
-
-        let username = values.username;
-        let password = values.password;
-
-
-            if(loginState.userId == '1'){
+        axios.post("http://localhost:8090/app/auth",{
+            username:values.username,
+            password:values.password
+        },{
+            headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+        }).then((response) => {
+            if(response.status == 200){
+               
                 navigate("/reader");
             }
-            else{
-                setTimeout(() => {
-                    setFormFlag(true);
-                },1000)
-                
-            }
+
+        }).catch(()=>{     
+            setFormFlag(true)
+            console.log("error");
+        });
+
+
+        // useEffect(()=> {
+ 
+    
+        // },[formFlag])
+
+
+
+
            
-        }
+    }
 
 
 

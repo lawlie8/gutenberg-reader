@@ -2,6 +2,7 @@ import Layout from "antd/es/layout/layout";
 import React, { useState, useEffect, version } from 'react';
 import { Footer } from "antd/es/layout/layout";
 import {END_GET_APPLICATION_PROPERTIES} from "../constants";
+import axios from "axios";
 
 const footerStyle = {
     textAlign: 'center',
@@ -16,29 +17,16 @@ const footerStyle = {
     height:'20px'
   };
   
-export default function GlobalFooter() {
+export default  function GlobalFooter() {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
   
-    useEffect(() => {
-      const fetchData = async () => {
-        setIsLoading(true);
-        try {
-          const response = await fetch("http://localhost:8090/web/application/properties/version");
-          if (!response.ok) {
-            throw new Error('Failed to fetch data');
-          }
-          const jsonData = await response.json();
-          setData(jsonData);
-        } catch (error) {
-          setError(error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-  
-      fetchData();
+
+    React.useEffect(() => {
+      axios.get("http://localhost:8090/web/application/properties/version").then((response) => {
+        setData(response.data);
+      });
     }, []);
 
     return (

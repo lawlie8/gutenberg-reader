@@ -21,10 +21,9 @@ public class GutenbergResourceHelperController {
     public ResponseEntity<?> getUserByUsername() {
         gutenbergResourceService.fetchDailyRDFFiles();
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("works", HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/application/properties/version",method = RequestMethod.GET)
     public ResponseEntity<?> applicationVersion(){
         String version = "0.1";
