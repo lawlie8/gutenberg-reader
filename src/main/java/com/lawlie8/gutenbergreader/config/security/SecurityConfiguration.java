@@ -1,22 +1,18 @@
 package com.lawlie8.gutenbergreader.config.security;
 
 import com.lawlie8.gutenbergreader.repositories.UserRepo;
+import org.apache.commons.logging.Log;
 import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
@@ -35,6 +31,9 @@ public class SecurityConfiguration{
 
     @Autowired
     FailuerHandler failureHandler;
+
+    @Autowired
+    LogOutSuccessHandler logOutSuccessHandler;
 
     @Bean
     public DaoAuthenticationProvider userDetailsService(CustomUserDetailService customUserDetailService, PasswordEncoder passwordEncoder){
@@ -58,7 +57,7 @@ public class SecurityConfiguration{
                     .usernameParameter("username")
                     .passwordParameter("password")
                     .permitAll();
-        }).logout((logout)-> logout.logoutUrl("/app/logout").deleteCookies("JSESSIONID").permitAll()).build();
+        }).logout((logout)-> logout.logoutUrl("/web/logout").logoutSuccessHandler(logOutSuccessHandler).deleteCookies("JSESSIONID").permitAll()).build();
     }
 
 

@@ -1,13 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { GET_DAILY_RSS_BOOK_DATA } from "../../constants";
-import { recentBooksInterface } from "../RecentBookInterface";
-import { notification } from "antd";
-import BookItem from "./BookItem";
 
-export default  function RecentBooks() {
 
-    const [data, setDailyRssBookData] = useState("recentBooksInterface");
+export default function RecentBooks() {
+
+    const [data, setData] = useState([]);
 
     const globalReaderStyle = {
         height: 'calc(100%)',
@@ -30,22 +28,22 @@ export default  function RecentBooks() {
 
     }
 
-
-    useEffect(()=>{
-            axios.get(GET_DAILY_RSS_BOOK_DATA)
-            .then((response)=>{
-                setDailyRssBookData(response.data.channel);
-            }).catch(()=>{
-                notification.error("error")
-            })
-    },[])
-    
+    useEffect(() => {
+        const requestAPI = async () => {
+            try {
+                const response = await axios.get(GET_DAILY_RSS_BOOK_DATA,{});
+                setData(response.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+    requestAPI();
+    },[]);
 
     return (
-        <div style={globalReaderStyle} className="recent-books" >
+        <div style={globalReaderStyle} className="recent-books">
             <div style={tesint}>
                 <div className="book-item">
-                    <BookItem data={data}></BookItem>
                 </div>
             </div>
         </div>

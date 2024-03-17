@@ -8,6 +8,7 @@ function App() {
   return (
     <section>
           <GutenBergRoute />
+              <GlobalHeader />
           <GlobalFooter />
     </section>
   );

@@ -27,16 +27,6 @@ export default function Login(){
     const [loginState,setState] = React.useState('0');
     const [api, contextHolder] = notification.useNotification();
 
-        useEffect(()=>{
-            api['error']({
-                message: 'Notification Title',
-                description:
-                  'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-              });
-        },[formFlag]);
-    
-
-
     function AuthenticateUser(values){
         setFormFlag(false);
         axios.post(END_GET_AUTH_LOGIN,{
@@ -53,7 +43,6 @@ export default function Login(){
 
         }).catch(()=>{     
             setFormFlag(true)
-            console.log("error");
         });
            
     }
