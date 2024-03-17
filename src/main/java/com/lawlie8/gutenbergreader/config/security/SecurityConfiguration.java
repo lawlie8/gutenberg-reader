@@ -48,13 +48,13 @@ public class SecurityConfiguration{
     @Order(1)
     public SecurityFilterChain mainFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity.httpBasic((basic)-> basic.disable()).csrf((csrf) -> csrf.disable()).authorizeHttpRequests((auth) -> {
-            auth.requestMatchers(AntPathRequestMatcher.antMatcher("/app/**"));
+            auth.requestMatchers(AntPathRequestMatcher.antMatcher("/app/**")).authenticated();
             auth.requestMatchers(AntPathRequestMatcher.antMatcher("/web/**")).permitAll();
         }).formLogin(httpSecurityFormLoginConfigurer -> {
             httpSecurityFormLoginConfigurer
                     .successHandler(sucessHandler)
                     .failureHandler(failureHandler)
-                    .loginProcessingUrl("/app/auth")
+                    .loginProcessingUrl("/web/auth")
                     .usernameParameter("username")
                     .passwordParameter("password")
                     .permitAll();

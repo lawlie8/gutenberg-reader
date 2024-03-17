@@ -39,7 +39,7 @@ export default function Login(){
 
     function AuthenticateUser(values){
         setFormFlag(false);
-        axios.post("http://localhost:8090/app/auth",{
+        axios.post(END_GET_AUTH_LOGIN,{
             username:values.username,
             password:values.password
         },{
@@ -48,24 +48,13 @@ export default function Login(){
               }
         }).then((response) => {
             if(response.status == 200){
-               
-                navigate("/reader");
+                navigate("/recent-books");
             }
 
         }).catch(()=>{     
             setFormFlag(true)
             console.log("error");
         });
-
-
-        // useEffect(()=> {
- 
-    
-        // },[formFlag])
-
-
-
-
            
     }
 

@@ -1,3 +1,4 @@
-const BASE_URL = "http://localhost:8090";
-const END_GET_APPLICATION_PROPERTIES = BASE_URL + "/web/application/properties/version";
-const END_GET_AUTH_LOGIN = BASE_URL + 'auth/login';
+export const BASE_URL = "http://localhost:3000";
+export const END_GET_APPLICATION_PROPERTIES = BASE_URL + "/web/application/properties/version";
+export const END_GET_AUTH_LOGIN = BASE_URL + '/web/auth';
+export const GET_DAILY_RSS_BOOK_DATA = BASE_URL + '/app/rss/book/daily'

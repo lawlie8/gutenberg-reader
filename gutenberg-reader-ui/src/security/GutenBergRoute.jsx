@@ -1,7 +1,7 @@
 import { Route,Routes } from "react-router-dom";
 import Reader from "../pages/Reader";
 import Categories from "../pages/Categories";
-import RecentBooks from "../pages/RecentBooks";
+import RecentBooks from "../pages/recent-boooks/RecentBooks";
 import Login from "../pages/Login";
 export default function GutenBergRoute(path = {path}){
     return(

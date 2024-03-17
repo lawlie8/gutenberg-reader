@@ -19,7 +19,7 @@ public class GutenbergResourceHelperController {
 
     @GetMapping(path="/users/")
     public ResponseEntity<?> getUserByUsername() {
-        gutenbergResourceService.fetchDailyRDFFiles();
+        //gutenbergResourceService.fetchDailyRDFFiles();
 
         return new ResponseEntity<>("works", HttpStatus.OK);
     }
