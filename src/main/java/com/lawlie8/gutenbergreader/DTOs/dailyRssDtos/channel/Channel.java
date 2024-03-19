@@ -5,33 +5,26 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.item.Item;
 
-@JacksonXmlRootElement(localName = "channel")
+import java.util.List;
+
 public class Channel {
 
-    @JacksonXmlProperty(localName = "title")
     private String title;
 
-    @JacksonXmlProperty(localName = "link")
     private String link;
 
-    @JacksonXmlProperty(localName = "description")
     private String description;
 
-    @JacksonXmlProperty(localName = "language")
     private String language;
 
-    @JacksonXmlProperty(localName = "webMaster")
     private String webMaster;
 
-    @JacksonXmlProperty(localName = "pubDate")
     private String pubDate;
 
-    @JacksonXmlProperty(localName = "lastBuildDate")
     private String lastBuildDate;
 
-    @JacksonXmlProperty(localName = "item")
-    @JacksonXmlElementWrapper(useWrapping = false)
-    private Item[] item;
+
+    private List<Item> item;
 
     public String getTitle() {
         return title;
@@ -89,11 +82,11 @@ public class Channel {
         this.lastBuildDate = lastBuildDate;
     }
 
-    public Item[] getItem() {
+    public List<Item> getItem() {
         return item;
     }
 
-    public void setItem(Item[] item) {
+    public void setItem(List<Item> item) {
         this.item = item;
     }
 }

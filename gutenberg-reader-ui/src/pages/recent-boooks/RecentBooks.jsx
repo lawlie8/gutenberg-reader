@@ -1,22 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { GET_DAILY_RSS_BOOK_DATA } from "../../constants";
-
-
+import './recent-books.css';
+import BookItem from "./BookItem";
+import { Col, Row } from "antd";
 export default function RecentBooks() {
 
     const [data, setData] = useState([]);
 
-    const globalReaderStyle = {
-        height: 'calc(100%)',
-        width: 'calc(100%)',
-        backgroundColor: '#ecd8b1',
-        left: '0px',
-        top: '0px',
-        zIndex: '-1',
-        position: 'absolute',
-
-    }
 
     const tesint = {
         backgroundColor: '#ecd8b1',
@@ -41,11 +32,14 @@ export default function RecentBooks() {
     },[]);
 
     return (
-        <div style={globalReaderStyle} className="recent-books">
-            <div style={tesint}>
-                <div className="book-item">
-                </div>
-            </div>
+        <div className="recent-books">
+           <div className="recent-books-container">
+                    {
+                    data.channel?.item.map((item,index) => (
+                        <BookItem key={index} title={item?.title} link={item?.link} description={item?.description} />
+                        ))
+                    }
+           </div>
         </div>
     );
 }

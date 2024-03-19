@@ -1,17 +1,40 @@
-export default function BookItem({data}){
+import { Card, Col, Layout, Row } from 'antd';
+import './recent-books.css'
+import { Content, Footer } from 'antd/es/layout/layout';
+import { Image } from 'antd';
+import Meta from 'antd/es/card/Meta';
+export default function BookItem({ title, link, description }) {
 
-    console.log(data);
+    function parseImageData(link) {
+        var bookId = link?.split("/").pop().split("\"")[0]
+        var index = link?.split(".org")[0] + ".org";
+        return index.substring(1, index.length) + `/cache/epub/` + bookId + `/pg${bookId}` + `.cover.medium.jpg`;
+    }
 
-    function parseImageData(link){
-        var bookId = link.split("/").pop()
-        var index = link.indexOf(".org")
-        return link.substring(0, index + bookId.length) + `/cache/epub/${bookId}/pg${bookId}.cover.medium.jpg`;
+    function parseTitle(title){
+        var titleArray = title.split(":");
+        return titleArray[0].substring(1,title.length - 1)
+    }
+
+    function parseDescription(title){
+        let Author = title?.split("by ")[1];
+        if(Author == undefined){
+            return "Un-known"
+        }else if(Author.length > 20){
+            return Author?.substring(0,20)
+        }
+        return Author?.substring(0,Author.length - 1)
     }
 
     return (
         <div className="book-item">
-            <img src={parseImageData(data.link)}></img>
-            <span>{data.title}</span>
+            <Card
+                hoverable
+                style={{ width: 240 }}
+                cover={<img height="300px" width="200px" alt={title} src={parseImageData(link)} />}
+            >
+                <Meta title={parseTitle(title)} description={parseDescription(title)}/>
+            </Card>
         </div>
     )
 }

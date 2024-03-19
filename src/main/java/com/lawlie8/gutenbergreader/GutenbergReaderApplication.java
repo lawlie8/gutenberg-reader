@@ -17,7 +17,6 @@ public class GutenbergReaderApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GutenbergReaderApplication.class, args);
-
 	}
 
 	@Bean

@@ -13,11 +13,12 @@ export default function GlobalHeader() {
     const headerStyle = {
         textAlign: 'center',
         color: '#fff',
-        position: 'absolute',
+        position: 'fixed',
         top: '0px',
         left: '0px',
         margin: '0px',
         width: 'calc(100%)',
+        zIndex: '23'
     };
 
     const logoutIconStyle = {
@@ -51,10 +52,18 @@ export default function GlobalHeader() {
         }).then((response) => {
             if(response.status == 200){
                 navigate("/");
-                notification.success("user logged out")
+                notification.success({
+                    message: "Logged Out",
+                    duration:1,
+                    description:"sucessfully logged out",
+                    style:{width:'250px'}
+                })
             }
         }).catch(()=>{     
-            notification.error("Logout Failed");
+            notification.error(({
+                message: "Error While Logging Out",
+                duration:3
+            }));
         });
     }
     

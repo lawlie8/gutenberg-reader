@@ -20,7 +20,7 @@ public class GutenbergReaderController {
 
     @RequestMapping(path="/rss/book/daily",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getDailyRssBooks() {
-        JsonNode dailyRssBookDto = gutenbergResourceService.fetchDailyRssBookTitles();
+        DailyRssBookDto dailyRssBookDto = gutenbergResourceService.fetchDailyRssBookTitles();
         return new ResponseEntity<>(dailyRssBookDto, HttpStatus.OK);
     }
 }

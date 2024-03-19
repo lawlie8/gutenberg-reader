@@ -8,13 +8,14 @@ const footerStyle = {
     textAlign: 'center',
     color: '#fff',
     backgroundColor: '#001529',
-    position:'absolute',
+    position:'fixed',
     bottom:'0px',
     left:'0px',
     margin:'0px',
     paddingTop:'5px',
     width: 'calc(100%)',
-    height:'20px'
+    height:'20px',
+    zIndex: '23'
   };
   
 export default  function GlobalFooter() {

@@ -1,17 +1,11 @@
 package com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.item;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
-@JacksonXmlRootElement(localName = "item")
 public class Item {
-    @JacksonXmlProperty(localName = "title")
     private String title;
 
-    @JacksonXmlProperty(localName = "link")
     private String link;
 
-    @JacksonXmlProperty(localName = "description")
     private String description;
 
     public String getTitle() {
