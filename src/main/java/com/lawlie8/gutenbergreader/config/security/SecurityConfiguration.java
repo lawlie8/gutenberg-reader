@@ -57,7 +57,11 @@ public class SecurityConfiguration{
                     .usernameParameter("username")
                     .passwordParameter("password")
                     .permitAll();
-        }).logout((logout)-> logout.logoutUrl("/web/logout").logoutSuccessHandler(logOutSuccessHandler).deleteCookies("JSESSIONID").permitAll()).build();
+        }).logout((logout)-> logout.logoutUrl("/web/logout")
+                .logoutSuccessHandler(logOutSuccessHandler)
+                .deleteCookies("JSESSIONID")
+                .permitAll())
+                .build();
     }
 
 

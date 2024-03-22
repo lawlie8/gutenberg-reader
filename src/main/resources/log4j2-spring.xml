@@ -1,0 +1,3 @@
+<SpringProfile name="development">
+    <Logger name="com.github.lawlie8" level="info"></Logger>
+</SpringProfile>
