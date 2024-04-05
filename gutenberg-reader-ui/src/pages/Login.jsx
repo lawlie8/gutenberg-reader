@@ -7,6 +7,7 @@ import axios from 'axios';
 import {END_GET_AUTH_LOGIN} from '../constants';
 import Alert from "antd/es/alert/Alert";
 import useNotification from "antd/es/notification/useNotification";
+import NotificationElement from "../utils/NotificationElement";
 
 const globalReaderStyle = {
     height : 'calc(100%)',
@@ -59,6 +60,7 @@ export default function Login(){
             showIcon
             />}
             <img src={ require("./../utils/assets/ivy-png.png")} style={{height:"calc(99%)"}}></img>
+            
         <div className="main-login">
             <img className="login-logo-icon" src="https://icon-library.com/images/cabbage-icon/cabbage-icon-5.jpg" height="40px" width="40px" alt="kobi" style={{paddingBottom:"5px"}}></img>
             <Form style={{paddingLeft:'20px',width:"250px"}} name="normal-login" className="login-form"  initialValues={{ remember: true }} onFinish={AuthenticateUser}>

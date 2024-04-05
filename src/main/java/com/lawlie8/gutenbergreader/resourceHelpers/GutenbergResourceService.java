@@ -5,7 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.DailyRssBookDto;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.Channel;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.item.Item;
+import com.lawlie8.gutenbergreader.config.security.CustomUserDetails;
 import com.lawlie8.gutenbergreader.util.XMLReaderUtilService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,6 +21,10 @@ import java.util.List;
 
 @Service
 public class GutenbergResourceService {
+
+    @Autowired
+    @Qualifier("sessionRegistry")
+    private SessionRegistry sessionRegistry;
 
     public boolean checkIfDailyRssFileExists(){
         return true;
@@ -26,7 +38,6 @@ public class GutenbergResourceService {
         if (checkIfDailyRssFileExists()) {
             try {
                 JsonNode jsonNode = XMLReaderUtilService.buildDailyRssBookDataFromXML();
-
                 return convertJsonNodetoDTO(jsonNode);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -35,6 +46,17 @@ public class GutenbergResourceService {
             return null;
         }
         return null;
+    }
+
+    public List<String> getAllUsers(){
+        List<String> allUsers = new ArrayList<>();
+        List<Object> principals = sessionRegistry.getAllPrincipals();
+        for (Object principal: principals) {
+        if (principal instanceof CustomUserDetails) {
+                allUsers.add(((CustomUserDetails) principal).getUsername());
+            }
+        }
+        return allUsers;
     }
 
     private DailyRssBookDto convertJsonNodetoDTO(JsonNode node) throws Exception{

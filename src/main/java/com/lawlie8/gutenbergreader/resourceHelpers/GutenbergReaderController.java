@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/app")
 public class GutenbergReaderController {
@@ -28,6 +30,12 @@ public class GutenbergReaderController {
     public ResponseEntity<?> getDailyRssBooks() {
         DailyRssBookDto dailyRssBookDto = gutenbergResourceService.fetchDailyRssBookTitles();
         return new ResponseEntity<>(dailyRssBookDto, HttpStatus.OK);
+    }
+
+    @RequestMapping(path="/user/all",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllUsers() {
+        List<String> users = gutenbergResourceService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @RequestMapping(path="/rss/book/daily/sync",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)

@@ -9,11 +9,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.session.*;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Configuration
@@ -60,10 +67,29 @@ public class SecurityConfiguration{
         }).logout((logout)-> logout.logoutUrl("/web/logout")
                 .logoutSuccessHandler(logOutSuccessHandler)
                 .deleteCookies("JSESSIONID")
-                .permitAll())
+                .permitAll()).sessionManagement(s -> s.sessionAuthenticationStrategy(concurrentSession()).maximumSessions(-1).expiredSessionStrategy(sessionInformationExpiredStrategy()))
                 .build();
     }
 
+    @Bean
+    public CompositeSessionAuthenticationStrategy concurrentSession() {
+        ConcurrentSessionControlAuthenticationStrategy concurrentAuthenticationStrategy = new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry());
+        List<SessionAuthenticationStrategy> delegateStrategies = new ArrayList<SessionAuthenticationStrategy>();
+        delegateStrategies.add(concurrentAuthenticationStrategy);
+        delegateStrategies.add(new SessionFixationProtectionStrategy());
+        delegateStrategies.add(new RegisterSessionAuthenticationStrategy(sessionRegistry()));
+        return new CompositeSessionAuthenticationStrategy(delegateStrategies);
+    }
+
+    @Bean
+    SessionInformationExpiredStrategy sessionInformationExpiredStrategy() {
+        return new CustomSessionInformationExpiredStrategy("/login");
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
