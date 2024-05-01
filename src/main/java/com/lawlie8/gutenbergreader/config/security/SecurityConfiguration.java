@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.*;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -67,8 +68,24 @@ public class SecurityConfiguration{
         }).logout((logout)-> logout.logoutUrl("/web/logout")
                 .logoutSuccessHandler(logOutSuccessHandler)
                 .deleteCookies("JSESSIONID")
-                .permitAll()).sessionManagement(s -> s.sessionAuthenticationStrategy(concurrentSession()).maximumSessions(-1).expiredSessionStrategy(sessionInformationExpiredStrategy()))
+                .permitAll())
+                /*.sessionManagement(s -> s.sessionAuthenticationStrategy(concurrentSession())
+                        .maximumSessions(-1)
+                        .expiredSessionStrategy(sessionInformationExpiredStrategy()))*/
                 .build();
+    }
+
+    @Bean
+    public SessionAuthenticationStrategy sessionAuthenticationStrategy(){
+        ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlAuthenticationStrategy = new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry());
+        concurrentSessionControlAuthenticationStrategy.setMaximumSessions(-1);
+        concurrentSessionControlAuthenticationStrategy.setExceptionIfMaximumExceeded(true);
+        return concurrentSessionControlAuthenticationStrategy;
+    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 
     @Bean

@@ -52,7 +52,9 @@ public class GutenbergResourceService {
         List<String> allUsers = new ArrayList<>();
         List<Object> principals = sessionRegistry.getAllPrincipals();
         for (Object principal: principals) {
-        if (principal instanceof CustomUserDetails) {
+            List<SessionInformation> session = sessionRegistry.getAllSessions(principal,false);
+            session.get(0).expireNow();
+            if (principal instanceof CustomUserDetails) {
                 allUsers.add(((CustomUserDetails) principal).getUsername());
             }
         }

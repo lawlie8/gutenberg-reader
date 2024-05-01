@@ -26,8 +26,13 @@ export default function BookItem({ title, link, description }) {
         return Author?.substring(0,Author.length - 1)
     }
 
+    function navigateToBookUrl(link){
+        link = link.replaceAll("\"","");
+        window.location = link;
+    }
+
     return (
-        <div className="book-item">
+        <div className="book-item" onClick={() => navigateToBookUrl(link)}>
             <Card
                 hoverable
                 style={{ width: 240 }}
