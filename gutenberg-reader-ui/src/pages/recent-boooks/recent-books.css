@@ -2,6 +2,42 @@
 
 }
 
+.download-book-item-option-list{
+    transition:cubic-bezier(0.55, 0.055, 0.675, 0.19) 0.5s ease-in;
+    position: relative;
+    align-items: center;
+    left: 28px;
+    top: -23px;
+    width: 26px;
+    background-color: rgb(0, 0, 0);
+    opacity: 0.7;
+    z-index: 1;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.download-book-icon{
+    align-items: center;
+    height: 25px;
+    width: 25px;
+    position: relative;
+    display: block;
+    z-index: 1;
+    top: 5px;
+    left: 90%;
+    border-radius: 10px;
+}
+
+.download-book-icon:hover{
+    position: relative;
+    display: block;
+    z-index: 1;
+    top: 5px;
+    left: 90%;
+    transition: all ease 0.5s;
+    border-radius: 10px;
+}
+
 
 .recent-books-container{
     height:100%;
@@ -16,7 +52,16 @@
 .book-item{
     display: flex;
     float: inline-start;
-    margin-top: 65px;
-    margin-left: 100px;
+    margin-top: 60px;
+    margin-right: 40px;
+    margin-left: 40px;
 }
    
+.book-item:last-of-type{
+    display: flex;
+    float: inline-start;
+    margin-top: 60px;
+    margin-bottom: 40px;
+    margin-right: 40px;
+    margin-left: 40px;
+}
