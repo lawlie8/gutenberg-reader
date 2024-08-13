@@ -31,6 +31,9 @@ public class BlobObjects {
     @Column(name = "asset_upload_date")
     private Date assetUploadDate;
 
+    @Column(name = "asset_sha1_hash")
+    private String assetSha1Hash;
+
     public Long getId() {
         return id;
     }
@@ -77,5 +80,13 @@ public class BlobObjects {
 
     public void setAssetUploadDate(Date assetUploadDate) {
         this.assetUploadDate = assetUploadDate;
+    }
+
+    public String getAssetSha1Hash() {
+        return assetSha1Hash;
+    }
+
+    public void setAssetSha1Hash(String assetSha1Hash) {
+        this.assetSha1Hash = assetSha1Hash;
     }
 }
