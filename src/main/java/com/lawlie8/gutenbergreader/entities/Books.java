@@ -1,9 +1,6 @@
 package com.lawlie8.gutenbergreader.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.Year;
 import java.util.Date;
@@ -13,6 +10,7 @@ import java.util.Date;
 public class Books {
 
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -27,6 +25,12 @@ public class Books {
 
     @Column(name = "book_type")
     private String bookType;
+
+    @Column(name = "book_language")
+    private String bookLanguage;
+
+    @Column(name = "book_description")
+    private String bookDescription;
 
     @Column(name = "year_of_publication")
     private Year yearOfPublication;
@@ -69,6 +73,22 @@ public class Books {
 
     public String getBookType() {
         return bookType;
+    }
+
+    public String getBookLanguage() {
+        return bookLanguage;
+    }
+
+    public void setBookLanguage(String bookLanguage) {
+        this.bookLanguage = bookLanguage;
+    }
+
+    public String getBookDescription() {
+        return bookDescription;
+    }
+
+    public void setBookDescription(String bookDescription) {
+        this.bookDescription = bookDescription;
     }
 
     public void setBookType(String bookType) {
