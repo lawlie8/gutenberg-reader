@@ -3,7 +3,7 @@ package com.lawlie8.gutenbergreader.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.lawlie8.gutenbergreader.repositories.GutenbergConfigPropertiesRepo;
-import com.lawlie8.gutenbergreader.resourceHelpers.AssetObjectFileProcessorServer;
+import com.lawlie8.gutenbergreader.resourceHelpers.AssetObjectFileProcessorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class XMLReaderUtilService {
     GutenbergConfigPropertiesRepo gutenbergConfigPropertiesRepo;
 
     @Autowired
-    AssetObjectFileProcessorServer assetObjectFileProcessorServer;
+    AssetObjectFileProcessorService assetObjectFileProcessorServer;
 
     public static JsonNode buildDailyRssBookDataFromXML() throws Exception {
         File xmlFile = new File(getFormattedDate() + "-today.rss");

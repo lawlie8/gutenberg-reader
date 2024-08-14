@@ -1,9 +1,6 @@
 package com.lawlie8.gutenbergreader.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.sql.Blob;
 import java.util.Date;
@@ -14,6 +11,7 @@ public class BlobObjects {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "asset_id")
