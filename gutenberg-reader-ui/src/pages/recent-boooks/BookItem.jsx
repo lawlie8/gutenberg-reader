@@ -2,12 +2,17 @@ import { Avatar, Card, Col, Layout, List, Row } from 'antd';
 import './recent-books.css'
 import { Content, Footer } from 'antd/es/layout/layout';
 import { Image } from 'antd';
-import { MoreOutlined,ReadOutlined,FileZipOutlined,LinkOutlined, BookOutlined } from '@ant-design/icons';
+import { MoreOutlined, ReadOutlined, FileZipOutlined, LinkOutlined, BookOutlined } from '@ant-design/icons';
 import Meta from 'antd/es/card/Meta';
 import React from 'react';
+import axios from 'axios';
+import { IMAGE_BLOB_DATA_URL, ZIP_BLOB_DATA_URL, EPUB_BLOB_DATA_URL } from '../../constants';
 export default function BookItem({ title, link, description }) {
 
-    const [downloadWindowFlag,setDownLoadWindowFlag] = React.useState(false);
+    const [downloadWindowFlag, setDownLoadWindowFlag] = React.useState(false);
+    const [imageData, setImageData] = React.useState(null);
+
+    FetechImageData(fetchBookId(link))
 
     function parseImageData(link) {
         var bookId = link?.split("/").pop().split("\"")[0]
@@ -15,84 +20,107 @@ export default function BookItem({ title, link, description }) {
         return index.substring(1, index.length) + `/cache/epub/` + bookId + `/pg${bookId}` + `.cover.medium.jpg`;
     }
 
-    function parseTitle(title){
+    function fetchBookId(link) {
+        return link?.split("/").pop().split("\"")[0]
+    }
+
+    function parseTitle(title) {
         var titleArray = title.split(":");
-        return titleArray[0].substring(1,title.length - 1)
+        return titleArray[0].substring(1, title.length - 1)
     }
 
-    function parseDescription(title){
+    function parseDescription(title) {
         let Author = title?.split("by ")[1];
-        if(Author === undefined){
+        if (Author === undefined) {
             return "Un-known"
-        }else if(Author.length > 20){
-            return Author?.substring(0,20)
+        } else if (Author.length > 20) {
+            return Author?.substring(0, 20)
         }
-        return Author?.substring(0,Author.length - 1)
+        return Author?.substring(0, Author.length - 1)
     }
 
 
-
-    function openDownloadOptionPop(link){
-        
+    function openDownloadOptionPop(link) {
         setDownLoadWindowFlag(!downloadWindowFlag)
     }
 
 
-    var checkNavigation = ()=>{
-        if(!downloadWindowFlag){
+    var checkNavigation = () => {
+        if (!downloadWindowFlag) {
             return "none";
-        }else{
+        } else {
             return "block";
         }
     }
 
 
-    function manageReadLocal(link){
+    function manageReadLocal(link) {
         console.log("Reading Locally");
-        
+
     }
 
-    function manageReadPlainHtml(link){
-        console.log("Reading Plain HTML Only");
-        
+    function manageFileEpubDownload(bookId) {
+        axios.get(EPUB_BLOB_DATA_URL + `${bookId}`, { responseType: 'blob' })
+            .then(res => {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `asset_${bookId}.epub`);
+                document.body.appendChild(link);
+                link.click();
+            })
     }
 
-    function manageFileZipDownload(link){
-        var bookId = link?.split("/").pop().split("\"")[0]
-        var index = link?.split(".org")[0] + ".org";
-        window.location = index.substring(1, index.length) + `/cache/epub/` + bookId + `/pg${bookId}` + `-h.zip`;
+    function manageFileZipDownload(bookId) {
+        axios.get(ZIP_BLOB_DATA_URL + `${bookId}`, { responseType: 'blob' })
+            .then(res => {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `asset_${bookId}.zip`);
+                document.body.appendChild(link);
+                link.click();
+            })
     }
 
-    function manageLinkOutSource(link){
-        link = link.replaceAll("\"","");
+    function manageLinkOutSource(link) {
+        link = link.replaceAll("\"", "");
         window.location = link;
     }
 
-//onClick={() => navigateToBookUrl(link)}
+    function FetechImageData(bookId) {
+        React.useEffect(() => {
+            axios.get(IMAGE_BLOB_DATA_URL + `${bookId}`, { responseType: 'blob' })
+                .then(res => {
+                    setImageData(window.URL.createObjectURL(new Blob([res.data])))
+                })
+        }, [bookId]);
+    }
+
     return (
         <div className="book-item" >
             <div className="download-book-icon"  >
-                <MoreOutlined onClick={()=> openDownloadOptionPop(link)} style={{fontSize: '18px',color:'black'}}/>
-                <div className="download-book-item-option-list" style={{display:checkNavigation()}}>
+                <MoreOutlined onClick={() => openDownloadOptionPop(link)} style={{ fontSize: '18px', color: 'black' }} />
+                <div className="download-book-item-option-list" style={{ display: checkNavigation() }}>
                     <List>
-                        <List.Item><ReadOutlined onClick={()=> manageReadLocal(link)} style={{fontSize: '20px',color:'white',paddingLeft:'2px'}} /></List.Item>
-                        <List.Item><BookOutlined onClick={()=> manageReadPlainHtml(link)} style={{fontSize: '20px',color:'white',paddingLeft:'2px'}} /></List.Item>
-                        <List.Item><FileZipOutlined onClick={()=> manageFileZipDownload(link)} style={{fontSize: '20px',color:'white',paddingLeft:'2px'}} /></List.Item>
-                        <List.Item><LinkOutlined onClick={()=> manageLinkOutSource(link)}  style={{fontSize: '20px',color:'white',paddingLeft:'2px'}} /></List.Item>
+                        <List.Item><ReadOutlined onClick={() => manageReadLocal(link)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
+                        <List.Item><BookOutlined onClick={() => manageFileEpubDownload(fetchBookId(link))} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
+                        <List.Item><FileZipOutlined onClick={() => manageFileZipDownload(fetchBookId(link))} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
+                        <List.Item><LinkOutlined onClick={() => manageLinkOutSource(link)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
                     </List>
                 </div>
             </div>
-            
-  
+
+
 
             <Card
                 hoverable
                 style={{ width: 240 }}
-                cover={<img height="300px" width="200px" alt={title} src={parseImageData(link)} />}
+                cover={<img id={fetchBookId(link)} height="300px" width="200px" alt={title} src={imageData} />}
             >
-                <Meta title={parseTitle(title)} description={parseDescription(title)}/>
+                <Meta title={parseTitle(title)} description={parseDescription(title)} />
             </Card>
         </div>
-        
+
     )
 }

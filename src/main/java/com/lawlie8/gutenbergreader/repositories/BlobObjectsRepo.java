@@ -11,4 +11,11 @@ public interface BlobObjectsRepo extends JpaRepository<BlobObjects,Long> {
     @Query(value = "SELECT `asset_data` FROM `blob_objects` WHERE `asset_id` = :bookId AND `asset_type` = 'picture'",nativeQuery = true)
     public byte[] fetchImageBlobById(long bookId);
 
+    @Query(value = "SELECT `asset_data` FROM `blob_objects` WHERE `asset_id` = :bookId AND `asset_type` = 'zip'",nativeQuery = true)
+    public byte[] fetchZipBlobById(long bookId);
+
+    @Query(value = "SELECT `asset_data` FROM `blob_objects` WHERE `asset_id` = :bookId AND `asset_type` = 'epub'",nativeQuery = true)
+    public byte[] fetchEpubBlobById(long bookId);
+
+
 }

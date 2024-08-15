@@ -18,7 +18,7 @@ public class BlobObjects {
     private Long bookId;
 
     @Column(name = "asset_data")
-    private Blob assetData;
+    private byte[] assetData;
 
     @Column(name = "asset_type")
     private String assetType;
@@ -48,11 +48,11 @@ public class BlobObjects {
         this.bookId = bookId;
     }
 
-    public Blob getAssetData() {
+    public byte[] getAssetData() {
         return assetData;
     }
 
-    public void setAssetData(Blob assetData) {
+    public void setAssetData(byte[] assetData) {
         this.assetData = assetData;
     }
 

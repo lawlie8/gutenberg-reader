@@ -7,6 +7,8 @@ import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.Channel;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.item.Item;
 import com.lawlie8.gutenbergreader.config.security.CustomUserDetails;
 import com.lawlie8.gutenbergreader.util.XMLReaderUtilService;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.session.SessionInformation;

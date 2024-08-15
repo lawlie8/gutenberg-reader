@@ -5,6 +5,11 @@ import com.lawlie8.gutenbergreader.entities.BlobObjects;
 import com.lawlie8.gutenbergreader.entities.Books;
 import com.lawlie8.gutenbergreader.repositories.BlobObjectsRepo;
 import com.lawlie8.gutenbergreader.repositories.BooksRepo;
+import jakarta.transaction.Transactional;
+import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,39 +41,58 @@ public class AssetObjectFileProcessorService {
     @Autowired
     private BlobObjectsRepo blobObjectsRepo;
 
-    public void processDailyDownloadDataIntoDatabase() throws SQLException, IOException {
+    Logger log = LoggerContext.getContext().getLogger(this.getClass().getName());
 
-        DailyRssBookDto dailyRssBookDto = gutenbergResourceService.fetchDailyRssBookTitles();
-        List<Books> allBooks = new ArrayList<>();
-        for (int i = 0; i < dailyRssBookDto.getChannel().getItem().size(); i++) {
-            Books books = new Books();
-            books.setTitle(dailyRssBookDto.getChannel().getItem().get(i).getTitle().replace("\"", ""));
-            books.setBookDescription(dailyRssBookDto.getChannel().getItem().get(i).getDescription().replace("\"", ""));
-            books.setBookLanguage(parseBookLanguage(dailyRssBookDto.getChannel().getItem().get(i).getDescription().replace("\"", "")));
-            books.setBookType(BOOK_TYPE_GUTENBERG_UPLOAD);
-            books.setBookId(parseBookId(dailyRssBookDto.getChannel().getItem().get(i).getLink()));
-            books.setAuthor(parseBookAuthor(dailyRssBookDto.getChannel().getItem().get(i).getTitle()));
-            books.setUploadDate(new Date());
-            books.setYearOfPublication(Year.now());
-            allBooks.add(books);
+    public void processDailyDownloadDataIntoDatabase() throws SQLException, IOException {
+        try {
+            log.info("Processing Daily Rss Data for date: {}", new Date().toString());
+            DailyRssBookDto dailyRssBookDto = gutenbergResourceService.fetchDailyRssBookTitles();
+            List<Books> allBooks = new ArrayList<>();
+            for (int i = 0; i < dailyRssBookDto.getChannel().getItem().size(); i++) {
+                Books books = new Books();
+                books.setTitle(dailyRssBookDto.getChannel().getItem().get(i).getTitle().replace("\"", ""));
+                books.setBookDescription(dailyRssBookDto.getChannel().getItem().get(i).getDescription().replace("\"", ""));
+                books.setBookLanguage(parseBookLanguage(dailyRssBookDto.getChannel().getItem().get(i).getDescription().replace("\"", "")));
+                books.setBookType(BOOK_TYPE_GUTENBERG_UPLOAD);
+                books.setBookId(parseBookId(dailyRssBookDto.getChannel().getItem().get(i).getLink()));
+                books.setAuthor(parseBookAuthor(dailyRssBookDto.getChannel().getItem().get(i).getTitle()));
+                books.setUploadDate(new Date());
+                books.setYearOfPublication(Year.now());
+                log.debug("Adding Books Entity : {}", books.toString());
+                allBooks.add(books);
+            }
+            booksRepo.saveAll(allBooks);
+            saveBlobObjects(allBooks);
+        } catch (Exception e) {
+            log.error("Exception Occurred While Processing Data with error message : ", e.toString());
         }
-        booksRepo.saveAll(allBooks);
-        saveBlobObjects(allBooks);
     }
 
     private void saveBlobObjects(List<Books> allBooks) throws SQLException, IOException {
-        List<BlobObjects> blobObjectsList = new ArrayList<>();
-        for (int i = 0; i < allBooks.size(); i++) {
-            Books books = allBooks.get(i);
-            blobObjectsList.add(saveZipBlob(books.getBookId()));
-            blobObjectsList.add(saveImageBlob(books.getBookId()));
-            blobObjectsList.add(saveEbookObject(books.getBookId()));
+        try {
+            List<BlobObjects> blobObjectsList = new ArrayList<>();
+            for (int i = 0; i < allBooks.size(); i++) {
+                Books books = allBooks.get(i);
+                blobObjectsList.add(saveZipBlob(books.getBookId()));
+                blobObjectsList.add(saveImageBlob(books.getBookId()));
+                blobObjectsList.add(saveEbookObject(books.getBookId()));
+            }
+            blobObjectsRepo.saveAllAndFlush(blobObjectsList);
+        } catch (Exception e) {
+            log.error("Exception Occurred While Saving Blob Objects with error message : {}", e);
         }
-        blobObjectsRepo.saveAll(blobObjectsList);
     }
 
-    public byte[] getBookCoverForId(Long bookId){
+    public byte[] getBookCoverForId(Long bookId) {
         return blobObjectsRepo.fetchImageBlobById(bookId);
+    }
+
+    public byte[] getZipBlobforDownload(Long assetId) {
+        return blobObjectsRepo.fetchZipBlobById(assetId);
+    }
+
+    public byte[] getEpubBlobforDownload(Long assetId) {
+        return blobObjectsRepo.fetchEpubBlobById(assetId);
     }
 
     private BlobObjects saveEbookObject(Long bookId) throws IOException, SQLException {
@@ -79,15 +103,12 @@ public class AssetObjectFileProcessorService {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             URL website = new URL(String.format(GUTENBERG_EBOOK_PREFIX, bookId.toString()));
             is = website.openStream();
-            byte[] byteChunk = new byte[4096];
-            int n;
-            while ((n = is.read(byteChunk)) > 0) {
-                baos.write(byteChunk, 0, n);
-            }
+            byte[] bytes = null;
+            bytes = IOUtils.toByteArray(is);
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            String sha1 = bytesToHex(digest.digest(byteChunk));
+            String sha1 = bytesToHex(digest.digest(bytes));
             blobObjects.setBookId(bookId);
-            blobObjects.setAssetData(new SerialBlob(byteChunk));
+            blobObjects.setAssetData(bytes);
             blobObjects.setAssetType("epub");
             blobObjects.setAssetUploadType("gutenberg_upload");
             blobObjects.setAssetUploadDate(new Date());
@@ -106,17 +127,16 @@ public class AssetObjectFileProcessorService {
             BlobObjects blobObjects = new BlobObjects();
             InputStream is = null;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            URL website = new URL(String.format(GUTENBERG_IMAGE_PREFIX, bookId.toString(),bookId.toString()));
+            URL website = new URL(String.format(GUTENBERG_IMAGE_PREFIX, bookId.toString(), bookId.toString()));
             is = website.openStream();
-            byte[] byteChunk = new byte[4096];
-            int n;
-            while ((n = is.read(byteChunk)) > 0) {
-                baos.write(byteChunk, 0, n);
-            }
+            byte[] bytes = null;
+            bytes = IOUtils.toByteArray(is);
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            String sha1 = bytesToHex(digest.digest(byteChunk));
+            String sha1 = bytesToHex(digest.digest(bytes));
             blobObjects.setBookId(bookId);
-            blobObjects.setAssetData(new SerialBlob(byteChunk));
+            blobObjects.setAssetData(bytes);
+            blobObjects.setBookId(bookId);
+            blobObjects.setAssetData(bytes);
             blobObjects.setAssetType("picture");
             blobObjects.setAssetUploadType("gutenberg_upload");
             blobObjects.setAssetUploadDate(new Date());
@@ -136,15 +156,14 @@ public class AssetObjectFileProcessorService {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             URL website = new URL(String.format(GUTENBERG_ZIP_PREFIX, bookId.toString(), bookId));
             is = website.openStream();
-            byte[] byteChunk = new byte[4096];
-            int n;
-            while ((n = is.read(byteChunk)) > 0) {
-                baos.write(byteChunk, 0, n);
-            }
+            byte[] bytes = null;
+            bytes = IOUtils.toByteArray(is);
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            String sha1 = bytesToHex(digest.digest(byteChunk));
+            String sha1 = bytesToHex(digest.digest(bytes));
             blobObjects.setBookId(bookId);
-            blobObjects.setAssetData(new SerialBlob(byteChunk));
+            blobObjects.setAssetData(bytes);
+            blobObjects.setBookId(bookId);
+            blobObjects.setAssetData(bytes);
             blobObjects.setAssetType("zip");
             blobObjects.setAssetUploadType("gutenberg_upload");
             blobObjects.setAssetUploadDate(new Date());
