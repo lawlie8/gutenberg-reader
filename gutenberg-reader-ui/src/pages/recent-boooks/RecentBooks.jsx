@@ -24,6 +24,8 @@ export default function RecentBooks() {
             try {
                 const response = await axios.get(GET_DAILY_RSS_BOOK_DATA,{});
                 setData(response.data);
+                console.log(data);
+                
             } catch (err) {
                 console.log(err);
             }
@@ -35,8 +37,8 @@ export default function RecentBooks() {
         <div className="recent-books">
            <div className="recent-books-container">
                     {
-                    data.channel?.item.map((item,index) => (
-                        <BookItem key={index} title={item?.title} link={item?.link} description={item?.description} />
+                    data.map((item,index) => (
+                        <BookItem key={index} title={item?.title} bookId={item?.bookId} description={item?.description} />
                         ))
                     }
            </div>

@@ -2,6 +2,7 @@ package com.lawlie8.gutenbergreader.resourceHelpers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.DailyRssBookDto;
+import com.lawlie8.gutenbergreader.entities.Books;
 import com.lawlie8.gutenbergreader.util.XMLReaderUtilService;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class GutenbergReaderController {
 
     @RequestMapping(path = "/rss/book/daily", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getDailyRssBooks() {
-        DailyRssBookDto dailyRssBookDto = gutenbergResourceService.fetchDailyRssBookTitles();
+        List<Books>  dailyRssBookDto = gutenbergResourceService.fetchDailyBookTitlesFromDb();
         return new ResponseEntity<>(dailyRssBookDto, HttpStatus.OK);
     }
 

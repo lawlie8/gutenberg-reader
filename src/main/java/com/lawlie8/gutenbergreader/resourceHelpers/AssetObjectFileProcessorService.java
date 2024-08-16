@@ -58,12 +58,17 @@ public class AssetObjectFileProcessorService {
                 books.setAuthor(parseBookAuthor(dailyRssBookDto.getChannel().getItem().get(i).getTitle()));
                 books.setUploadDate(new Date());
                 books.setYearOfPublication(Year.now());
-                log.debug("Adding Books Entity : {}", books.toString());
+                try {
+                    log.debug("Adding Books Entity : {}", books.toString());
+                    booksRepo.save(books);
+                }catch (Exception e){
+                    log.error("Exception While Saving Book Object :" +e.toString());
+                }
                 allBooks.add(books);
             }
-            booksRepo.saveAll(allBooks);
             saveBlobObjects(allBooks);
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("Exception Occurred While Processing Data with error message : ", e.toString());
         }
     }
@@ -79,7 +84,7 @@ public class AssetObjectFileProcessorService {
             }
             blobObjectsRepo.saveAllAndFlush(blobObjectsList);
         } catch (Exception e) {
-            log.error("Exception Occurred While Saving Blob Objects with error message : {}", e);
+            log.error("Exception Occurred While Saving Blob Objects with error message : ", e);
         }
     }
 

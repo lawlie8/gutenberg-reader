@@ -6,6 +6,8 @@ import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.DailyRssBookDto;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.Channel;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.item.Item;
 import com.lawlie8.gutenbergreader.config.security.CustomUserDetails;
+import com.lawlie8.gutenbergreader.entities.Books;
+import com.lawlie8.gutenbergreader.repositories.BooksRepo;
 import com.lawlie8.gutenbergreader.util.XMLReaderUtilService;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
@@ -19,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,6 +30,10 @@ public class GutenbergResourceService {
     @Autowired
     @Qualifier("sessionRegistry")
     private SessionRegistry sessionRegistry;
+
+    @Autowired
+    private BooksRepo booksRepo;
+
 
     public boolean checkIfDailyRssFileExists(){
         return true;
@@ -48,6 +55,11 @@ public class GutenbergResourceService {
             return null;
         }
         return null;
+    }
+
+    public List<Books> fetchDailyBookTitlesFromDb(){
+        List<Books>  books = booksRepo.getAllBooksForToday(new Date());
+        return books;
     }
 
     public List<String> getAllUsers(){

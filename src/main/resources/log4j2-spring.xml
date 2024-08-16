@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" name="MyApp">
     <Appenders>
-        <File name="MyFile" fileName="logs/app.log">
+        <File name="MyFile" fileName="logs/log.log">
             <PatternLayout>
                 <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
             </PatternLayout>
         </File>
     </Appenders>
     <Loggers>
-        <Root level="error">
-            <AppenderRef ref="MyFile"/>
-        </Root>
+        <Loggers>
+            <Root level="ERROR" additivity="false">
+                <AppenderRef level="DEBUG" ref="CONSOLE" />
+            </Root>
+            <Logger name="com.lawlie8.*" level="ALL"
+                    additivity="false">
+                <Appender-ref ref="CONSOLE" level="DEBUG" />
+            </Logger>
+
+        </Loggers>
+
     </Loggers>
 </Configuration>

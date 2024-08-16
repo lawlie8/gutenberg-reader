@@ -7,12 +7,12 @@ import Meta from 'antd/es/card/Meta';
 import React from 'react';
 import axios from 'axios';
 import { IMAGE_BLOB_DATA_URL, ZIP_BLOB_DATA_URL, EPUB_BLOB_DATA_URL } from '../../constants';
-export default function BookItem({ title, link, description }) {
+export default function BookItem({ title, bookId, author,uploadDate }) {
 
     const [downloadWindowFlag, setDownLoadWindowFlag] = React.useState(false);
     const [imageData, setImageData] = React.useState(null);
 
-    FetechImageData(fetchBookId(link))
+    FetechImageData(bookId)
 
     function parseImageData(link) {
         var bookId = link?.split("/").pop().split("\"")[0]
@@ -54,7 +54,7 @@ export default function BookItem({ title, link, description }) {
     }
 
 
-    function manageReadLocal(link) {
+    function manageReadLocal() {
         console.log("Reading Locally");
 
     }
@@ -83,9 +83,8 @@ export default function BookItem({ title, link, description }) {
             })
     }
 
-    function manageLinkOutSource(link) {
-        link = link.replaceAll("\"", "");
-        window.location = link;
+    function manageLinkOutSource(bookId) {
+        window.location = `https://www.gutenberg.org/ebooks/${bookId}`;
     }
 
     function FetechImageData(bookId) {
@@ -100,13 +99,13 @@ export default function BookItem({ title, link, description }) {
     return (
         <div className="book-item" >
             <div className="download-book-icon"  >
-                <MoreOutlined onClick={() => openDownloadOptionPop(link)} style={{ fontSize: '18px', color: 'black' }} />
+                <MoreOutlined onClick={() => openDownloadOptionPop(bookId)} style={{ fontSize: '18px', color: 'black' }} />
                 <div className="download-book-item-option-list" style={{ display: checkNavigation() }}>
                     <List>
-                        <List.Item><ReadOutlined onClick={() => manageReadLocal(link)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
-                        <List.Item><BookOutlined onClick={() => manageFileEpubDownload(fetchBookId(link))} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
-                        <List.Item><FileZipOutlined onClick={() => manageFileZipDownload(fetchBookId(link))} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
-                        <List.Item><LinkOutlined onClick={() => manageLinkOutSource(link)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
+                        <List.Item><ReadOutlined onClick={() => manageReadLocal(bookId)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
+                        <List.Item><BookOutlined onClick={() => manageFileEpubDownload(bookId)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
+                        <List.Item><FileZipOutlined onClick={() => manageFileZipDownload(bookId)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
+                        <List.Item><LinkOutlined onClick={() => manageLinkOutSource(bookId)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
                     </List>
                 </div>
             </div>
@@ -116,7 +115,7 @@ export default function BookItem({ title, link, description }) {
             <Card
                 hoverable
                 style={{ width: 240 }}
-                cover={<img id={fetchBookId(link)} height="300px" width="200px" alt={title} src={imageData} />}
+                cover={<img id={bookId} height="300px" width="200px" alt={title} src={imageData} />}
             >
                 <Meta title={parseTitle(title)} description={parseDescription(title)} />
             </Card>
