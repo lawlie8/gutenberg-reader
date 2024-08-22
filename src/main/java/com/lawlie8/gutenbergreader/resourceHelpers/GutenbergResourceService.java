@@ -10,6 +10,7 @@ import com.lawlie8.gutenbergreader.entities.Books;
 import com.lawlie8.gutenbergreader.repositories.BooksRepo;
 import com.lawlie8.gutenbergreader.util.XMLReaderUtilService;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,6 +34,8 @@ public class GutenbergResourceService {
 
     @Autowired
     private BooksRepo booksRepo;
+
+    Logger log = LoggerContext.getContext().getLogger(this.getClass().getName());
 
 
     public boolean checkIfDailyRssFileExists(){
@@ -59,6 +62,16 @@ public class GutenbergResourceService {
 
     public List<Books> fetchDailyBookTitlesFromDb(){
         List<Books>  books = booksRepo.getAllBooksForToday(new Date());
+        return books;
+    }
+
+    public List<Books> searchBooksFromDatabase(String searchElement){
+        List<Books> books = new ArrayList<>();
+        try {
+            books = booksRepo.searchBooksByName("%"+searchElement+"%");
+        }catch (Exception e){
+            log.error("Exception Occurred While Searching Book with name : " + searchElement);
+        }
         return books;
     }
 

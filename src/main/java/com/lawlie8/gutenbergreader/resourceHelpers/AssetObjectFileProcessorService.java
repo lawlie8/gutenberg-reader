@@ -82,7 +82,13 @@ public class AssetObjectFileProcessorService {
                 blobObjectsList.add(saveImageBlob(books.getBookId()));
                 blobObjectsList.add(saveEbookObject(books.getBookId()));
             }
-            blobObjectsRepo.saveAllAndFlush(blobObjectsList);
+            for(int i = 0;i<blobObjectsList.size();i++){
+                try {
+                    blobObjectsRepo.save(blobObjectsList.get(i));
+                }catch (Exception e){
+                    log.error("Exception Occurred While Saving Blob Object with id" + blobObjectsList.get(i).getBookId());
+                }
+            }
         } catch (Exception e) {
             log.error("Exception Occurred While Saving Blob Objects with error message : ", e);
         }

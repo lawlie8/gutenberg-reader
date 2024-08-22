@@ -7,17 +7,15 @@
             </PatternLayout>
         </File>
     </Appenders>
-    <Loggers>
         <Loggers>
-            <Root level="ERROR" additivity="false">
-                <AppenderRef level="DEBUG" ref="CONSOLE" />
-            </Root>
-            <Logger name="com.lawlie8.*" level="ALL"
+            <Logger name="com.lawlie8.*" level="INFO"
                     additivity="false">
                 <Appender-ref ref="CONSOLE" level="DEBUG" />
             </Logger>
-
-        </Loggers>
+            <Logger name="org.lawlie8.*" level="INFO"
+                    additivity="false">
+                <Appender-ref ref="CONSOLE" level="DEBUG" />
+            </Logger>
 
     </Loggers>
 </Configuration>

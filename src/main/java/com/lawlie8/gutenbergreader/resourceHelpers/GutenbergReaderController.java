@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.DailyRssBookDto;
 import com.lawlie8.gutenbergreader.entities.Books;
 import com.lawlie8.gutenbergreader.util.XMLReaderUtilService;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -35,6 +37,9 @@ public class GutenbergReaderController {
     @Autowired
     AssetObjectFileProcessorService assetObjectFileProcessorService;
 
+    Logger log = LoggerContext.getContext().getLogger(this.getClass().getName());
+
+
     @RequestMapping(path = "/rss/book/daily", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getDailyRssBooks() {
         List<Books>  dailyRssBookDto = gutenbergResourceService.fetchDailyBookTitlesFromDb();
@@ -64,6 +69,18 @@ public class GutenbergReaderController {
         Resource resource = new ByteArrayResource(assetObjectFileProcessorService.getEpubBlobforDownload(assetId));
         return ResponseEntity.ok().body(resource);
     }
+
+    @RequestMapping(path = "/web/global/search/{searchElement}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Books>> searchBooksFromDatabase(@PathVariable(name = "searchElement") String searchElement) {
+        log.info("Rest call for Global Search Api : "+searchElement);
+        List<Books> searchBooksLists = gutenbergResourceService.searchBooksFromDatabase(searchElement);
+        System.out.println(searchBooksLists);
+        System.out.println(searchElement);
+
+        return ResponseEntity.ok().body(searchBooksLists);
+    }
+
+
 
     @RequestMapping(path = "/rss/book/daily/sync", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getDailyRssBooksFromSource() {

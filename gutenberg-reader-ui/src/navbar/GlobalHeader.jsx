@@ -1,14 +1,17 @@
-import { Flex, Menu, notification } from 'antd';
-import { Link, NavLink, Route, useNavigate,Router, Routes } from 'react-router-dom';
+import { Flex, Menu, notification, Input, List, Avatar } from 'antd';
+import { Link, NavLink, Route, useNavigate, Router, Routes } from 'react-router-dom';
 import React from "react";
 import Reader from '../pages/Reader';
 import GutenBergRoute from '../security/GutenBergRoute';
-import {LogoutOutlined} from '@ant-design/icons';
-import { END_GET_AUTH_LOGIN, END_GET_AUTH_LOGOUT } from '../constants';
+import { LogoutOutlined } from '@ant-design/icons';
+import { END_GET_AUTH_LOGIN, END_GET_AUTH_LOGOUT, NAVBAR_SEARCH_API } from '../constants';
 import axios from 'axios';
+import './navbar.css'
 export default function GlobalHeader() {
 
     const navigate = useNavigate();
+    const [searchData, setSearchData] = React.useState([]);
+    const { Search } = Input;
 
     const headerStyle = {
         textAlign: 'center',
@@ -22,12 +25,12 @@ export default function GlobalHeader() {
     };
 
     const logoutIconStyle = {
-        color:"white",
-        zIndex:"111",
-        position:"fixed",
-        right:"0px",
-        top:"14px",
-        paddingRight:"10px"
+        color: "white",
+        zIndex: "111",
+        position: "fixed",
+        right: "0px",
+        top: "14px",
+        paddingRight: "10px"
     };
 
 
@@ -36,70 +39,137 @@ export default function GlobalHeader() {
         label: `${item.name}`,
     }));
 
-    var checkNavigation = ()=>{
-        if(window.location.pathname == "/"){
+    var checkNavigation = () => {
+        if (window.location.pathname == "/") {
             return "none";
-        }else{
+        } else {
             return "flex";
         }
     }
 
-    function logutCurrentUser(){
-        axios.post(END_GET_AUTH_LOGOUT,{},{
+    function onSearch(value) {
+        if(value.nativeEvent !== undefined){
+            value = value.nativeEvent.explicitOriginalTarget.value;
+        }
+        
+        if (value.length > 0 && value.length > 2) {
+            try {
+                axios.get(NAVBAR_SEARCH_API + `${value}`).then(res => {
+                    setSearchData(res.data);
+                })
+            } catch {
+
+            }
+        }
+
+    }
+
+    const [searchTerm, setSearchTerm] = React.useState('')
+
+    React.useEffect(() => {
+      const delayDebounceFn = setTimeout(() => {
+        onSearch(searchTerm);
+    }, 1500)
+  
+      return () => clearTimeout(delayDebounceFn)
+    }, [searchTerm])
+
+    function logutCurrentUser() {
+        axios.post(END_GET_AUTH_LOGOUT, {}, {
             headers: {
                 'Content-Type': 'multipart/form-data'
-              }
+            }
         }).then((response) => {
-            if(response.status == 200){
+            if (response.status == 200) {
                 navigate("/");
                 notification.success({
                     message: "Logged Out",
-                    duration:1,
-                    description:"sucessfully logged out",
-                    style:{width:'250px'}
+                    duration: 1,
+                    description: "sucessfully logged out",
+                    style: { width: '250px' }
                 })
             }
-        }).catch(()=>{     
+        }).catch(() => {
             notification.error(({
                 message: "Error While Logging Out",
-                duration:3
+                duration: 3
             }));
         });
     }
+
+    var checkSearchVisibility = () => {
+        if (searchData.length == 0) {
+            return "none";
+        } else {
+            return "block";
+        }
+    }
+
+    const escFunction = React.useCallback((event) => {
+        if (event.key === "Escape") {
+            setSearchData([])
+        }
+      }, []);
     
+      React.useEffect(() => {
+        document.addEventListener("keydown", escFunction, false);
+        return () => {
+          document.removeEventListener("keydown", escFunction, false);
+        };
+      }, [escFunction]);
+
+    function setKeyTerm(value){
+        if(value.nativeEvent !== undefined){
+            value = value.nativeEvent.explicitOriginalTarget.value;
+            setSearchTerm(value)
+        }
+    }
 
     return (
-        <div style={{display : checkNavigation()}}>
+        <div style={{ display: checkNavigation() }}>
             <Menu
                 theme='dark'
                 mode='horizontal'
                 defaultSelectedKeys={['1']}
                 items={items}
                 style={headerStyle}
-                onClick={({key}) => navigate(key)}
-                >
+                onClick={({ key }) => navigate(key)}
+            >
             </Menu>
+            <Search className='navbar-search' placeholder="input search text"  onSearch={onSearch} enterButton onKeyUp={(e) => setKeyTerm(e)} />
+            <div className='global-search-list' style={{ display: checkSearchVisibility() }}>
+                <List>
+                    {
+                        searchData.map((item, index) => (
+                            <List.Item className='global-search-list-item' key={index}>
+                                <img></img> {item.title}
+                            </List.Item>
+                        ))
+                    }
+                </List>
+
+            </div>
             <LogoutOutlined style={logoutIconStyle} onClick={logutCurrentUser} />
         </div>
     );
 
-    
+
 }
 
 
 function getNavBarItems() {
     const navbarList = [
         {
-            name:'Reader',
-            path:'/reader'
+            name: 'Reader',
+            path: '/reader'
         },
         {
-            name:'Recent Books',
-            path:'/recent-books'
-        },{
-            name:'Categories',
-            path:'/categories'
+            name: 'Recent Books',
+            path: '/recent-books'
+        }, {
+            name: 'Categories',
+            path: '/categories'
         },
-        ]
+    ]
     return navbarList;
 }

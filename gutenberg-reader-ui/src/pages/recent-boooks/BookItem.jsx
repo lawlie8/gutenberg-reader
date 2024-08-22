@@ -14,20 +14,6 @@ export default function BookItem({ title, bookId, author,uploadDate }) {
 
     FetechImageData(bookId)
 
-    function parseImageData(link) {
-        var bookId = link?.split("/").pop().split("\"")[0]
-        var index = link?.split(".org")[0] + ".org";
-        return index.substring(1, index.length) + `/cache/epub/` + bookId + `/pg${bookId}` + `.cover.medium.jpg`;
-    }
-
-    function fetchBookId(link) {
-        return link?.split("/").pop().split("\"")[0]
-    }
-
-    function parseTitle(title) {
-        var titleArray = title.split(":");
-        return titleArray[0].substring(1, title.length - 1)
-    }
 
     function parseDescription(title) {
         let Author = title?.split("by ")[1];
@@ -117,7 +103,7 @@ export default function BookItem({ title, bookId, author,uploadDate }) {
                 style={{ width: 240 }}
                 cover={<img id={bookId} height="300px" width="200px" alt={title} src={imageData} />}
             >
-                <Meta title={parseTitle(title)} description={parseDescription(title)} />
+                <Meta title={title} description={parseDescription(title)} />
             </Card>
         </div>
 
