@@ -48,11 +48,11 @@ export default function GlobalHeader() {
     }
 
     function onSearch(value) {
-        if(value.nativeEvent !== undefined){
+        if (value.nativeEvent !== undefined) {
             value = value.nativeEvent.explicitOriginalTarget.value;
         }
-        
-        if (value.length > 0 && value.length > 2) {
+
+        if (value.length > 0) {
             try {
                 axios.get(NAVBAR_SEARCH_API + `${value}`).then(res => {
                     setSearchData(res.data);
@@ -67,11 +67,11 @@ export default function GlobalHeader() {
     const [searchTerm, setSearchTerm] = React.useState('')
 
     React.useEffect(() => {
-      const delayDebounceFn = setTimeout(() => {
-        onSearch(searchTerm);
-    }, 1500)
-  
-      return () => clearTimeout(delayDebounceFn)
+        const delayDebounceFn = setTimeout(() => {
+            onSearch(searchTerm);
+        }, 1500)
+
+        return () => clearTimeout(delayDebounceFn)
     }, [searchTerm])
 
     function logutCurrentUser() {
@@ -109,17 +109,17 @@ export default function GlobalHeader() {
         if (event.key === "Escape") {
             setSearchData([])
         }
-      }, []);
-    
-      React.useEffect(() => {
+    }, []);
+
+    React.useEffect(() => {
         document.addEventListener("keydown", escFunction, false);
         return () => {
-          document.removeEventListener("keydown", escFunction, false);
+            document.removeEventListener("keydown", escFunction, false);
         };
-      }, [escFunction]);
+    }, [escFunction]);
 
-    function setKeyTerm(value){
-        if(value.nativeEvent !== undefined){
+    function setKeyTerm(value) {
+        if (value.nativeEvent !== undefined) {
             value = value.nativeEvent.explicitOriginalTarget.value;
             setSearchTerm(value)
         }
@@ -136,7 +136,7 @@ export default function GlobalHeader() {
                 onClick={({ key }) => navigate(key)}
             >
             </Menu>
-            <Search className='navbar-search' placeholder="input search text"  onSearch={onSearch} enterButton onKeyUp={(e) => setKeyTerm(e)} />
+            <Search className='navbar-search' placeholder="input search text" onSearch={onSearch} enterButton onKeyUp={(e) => setKeyTerm(e)} />
             <div className='global-search-list' style={{ display: checkSearchVisibility() }}>
                 <List>
                     {
