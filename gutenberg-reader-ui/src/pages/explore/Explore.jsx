@@ -4,8 +4,7 @@ import { FETCH_BOOKS_BY_PAGE } from "../../constants";
 import axios from "axios";
 import React, { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BookItem from "../recent-boooks/BookItem";
-import { InView, useInView } from 'react-intersection-observer';
-import VirtualAndInfiniteScroll from "./VirtualAndInfiniteScroll";
+import {useInView } from 'react-intersection-observer';
 export default function Explore() {
 
   const [currentRenderedBooks, setCurrentRenderedBooks] = useState([]);
