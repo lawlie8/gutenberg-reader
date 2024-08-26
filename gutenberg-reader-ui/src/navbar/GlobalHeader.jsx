@@ -69,7 +69,7 @@ export default function GlobalHeader() {
     React.useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             onSearch(searchTerm);
-        }, 1500)
+        }, 1000)
 
         return () => clearTimeout(delayDebounceFn)
     }, [searchTerm])
@@ -136,7 +136,7 @@ export default function GlobalHeader() {
                 onClick={({ key }) => navigate(key)}
             >
             </Menu>
-            <Search className='navbar-search' placeholder="input search text" onSearch={onSearch} enterButton onKeyUp={(e) => setKeyTerm(e)} />
+            <Search className='navbar-search' placeholder="Search" onSearch={onSearch} enterButton onKeyUp={(e) => setKeyTerm(e)} />
             <div className='global-search-list' style={{ display: checkSearchVisibility() }}>
                 <List>
                     {
@@ -167,8 +167,8 @@ function getNavBarItems() {
             name: 'Recent Books',
             path: '/recent-books'
         }, {
-            name: 'Categories',
-            path: '/categories'
+            name: 'Explore',
+            path: '/explore'
         },
     ]
     return navbarList;

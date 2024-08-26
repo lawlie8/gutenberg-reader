@@ -74,9 +74,13 @@ public class GutenbergReaderController {
     public ResponseEntity<List<Books>> searchBooksFromDatabase(@PathVariable(name = "searchElement") String searchElement) {
         log.info("Rest call for Global Search Api : "+searchElement);
         List<Books> searchBooksLists = gutenbergResourceService.searchBooksFromDatabase(searchElement);
-        System.out.println(searchBooksLists);
-        System.out.println(searchElement);
+        return ResponseEntity.ok().body(searchBooksLists);
+    }
 
+    @RequestMapping(path = "/web/books/fetch/all/{page}/{size}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Books>> fetchBooks(@PathVariable(name = "size") Integer size,@PathVariable(name = "page") Integer page) {
+        log.info("Rest call for Fetch Book with size : {} : page {}",size,page);
+        List<Books> searchBooksLists = gutenbergResourceService.fetchAllBooksPageble(size,page);
         return ResponseEntity.ok().body(searchBooksLists);
     }
 

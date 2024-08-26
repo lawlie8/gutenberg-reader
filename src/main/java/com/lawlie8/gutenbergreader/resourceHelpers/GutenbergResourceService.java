@@ -14,6 +14,9 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
@@ -71,6 +74,18 @@ public class GutenbergResourceService {
             books = booksRepo.searchBooksByName("%"+searchElement+"%");
         }catch (Exception e){
             log.error("Exception Occurred While Searching Book with name : " + searchElement);
+        }
+        return books;
+    }
+
+
+    public List<Books> fetchAllBooksPageble(Integer size,Integer page){
+        List<Books> books = new ArrayList<>();
+        try {
+            Integer low = page * size;
+            books = booksRepo.findAllByPage(low,size);
+        }catch (Exception e){
+            log.error("Exception Occurred While Fetching Books for size {} : page {} : {}" ,size,page,e);
         }
         return books;
     }

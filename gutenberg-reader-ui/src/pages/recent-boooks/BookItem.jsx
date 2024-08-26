@@ -84,7 +84,7 @@ export default function BookItem({ title, bookId, author,uploadDate }) {
 
     return (
         <div className="book-item" >
-            <div className="download-book-icon"  >
+            <div className="download-book-icon">
                 <MoreOutlined onClick={() => openDownloadOptionPop(bookId)} style={{ fontSize: '18px', color: 'black' }} />
                 <div className="download-book-item-option-list" style={{ display: checkNavigation() }}>
                     <List>
@@ -100,7 +100,7 @@ export default function BookItem({ title, bookId, author,uploadDate }) {
 
             <Card
                 hoverable
-                style={{ width: 240 }}
+                style={{ width: 240}}
                 cover={<img id={bookId} height="300px" width="200px" alt={title} src={imageData} />}
             >
                 <Meta title={title} description={parseDescription(title)} />

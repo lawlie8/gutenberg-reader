@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { GET_DAILY_RSS_BOOK_DATA } from "../../constants";
 import './recent-books.css';
 import BookItem from "./BookItem";
-import { Col, Row } from "antd";
+import { Col, List, Row } from "antd";
 export default function RecentBooks() {
 
     const [data, setData] = useState([]);
@@ -22,26 +22,31 @@ export default function RecentBooks() {
     useEffect(() => {
         const requestAPI = async () => {
             try {
-                const response = await axios.get(GET_DAILY_RSS_BOOK_DATA,{});
+                const response = await axios.get(GET_DAILY_RSS_BOOK_DATA, {});
                 setData(response.data);
                 console.log(data);
-                
+
             } catch (err) {
                 console.log(err);
             }
         };
-    requestAPI();
-    },[]);
+        requestAPI();
+    }, []);
 
     return (
         <div className="recent-books">
-           <div className="recent-books-container">
+            <div className="recent-books-container">
+                <Row>
                     {
-                    data.map((item,index) => (
-                        <BookItem key={index} title={item?.title} bookId={item?.bookId} description={item?.description} />
+                        data.map((item, index) => (
+                            <Col span={6}>
+                                <BookItem id={index} key={index} title={item?.title} bookId={item?.bookId} description={item?.description} />
+                            </Col>
                         ))
                     }
-           </div>
+                    </Row>
+
+            </div>
         </div>
     );
 }

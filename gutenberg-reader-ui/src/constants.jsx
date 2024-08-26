@@ -7,5 +7,6 @@ export const IMAGE_BLOB_DATA_URL = BASE_URL + '/app/blob/image/asset/';
 export const ZIP_BLOB_DATA_URL = BASE_URL + '/app/blob/zip/asset/';
 export const EPUB_BLOB_DATA_URL = BASE_URL + '/app/blob/epub/asset/';
 export const NAVBAR_SEARCH_API = BASE_URL + '/app/web/global/search/';
+export const FETCH_BOOKS_BY_PAGE = BASE_URL + '/app/web/books/fetch/all/';
 
 
