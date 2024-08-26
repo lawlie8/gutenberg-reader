@@ -1,0 +1,32 @@
+.explore-navbar{
+    position: fixed;
+    height:calc(100% - 40px);
+    top: 40px;
+    width: calc(15%);
+    background-color: white;
+    box-shadow: 1px 0px 10px rgb(131, 82, 82);
+}
+
+.explore-main{
+    position: relative;
+    display: block;
+    left: calc(18%);
+    height:100vh;
+    top: 40px;
+    width: calc(85% - 70px);
+}
+
+.explore-navbar-content{
+    position: fixed;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.explore-sider{
+    position: fixed;
+    height: 100%;
+    text-align: 'center';
+    line-height : '120px';
+    color: '#fff';
+    background-color: '#1677ff';
+}
