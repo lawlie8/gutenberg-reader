@@ -79,7 +79,7 @@ export default function BookItem({ title, bookId, author,uploadDate }) {
                 .then(res => {
                     setImageData(window.URL.createObjectURL(new Blob([res.data])))
                 })
-        }, [bookId]);
+            }, [bookId]);
     }
 
     return (
@@ -101,7 +101,8 @@ export default function BookItem({ title, bookId, author,uploadDate }) {
             <Card
                 hoverable
                 style={{ width: 240}}
-                cover={<img id={bookId} height="300px" width="200px" alt={title} src={imageData} />}
+                loading={false}
+                cover={<img id={bookId} height="300px" width="200px" alt={title} src={imageData}/>}
             >
                 <Meta title={title} description={parseDescription(title)} />
             </Card>

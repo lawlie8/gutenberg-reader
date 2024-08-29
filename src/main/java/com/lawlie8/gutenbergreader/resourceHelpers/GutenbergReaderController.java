@@ -42,7 +42,7 @@ public class GutenbergReaderController {
 
     @RequestMapping(path = "/rss/book/daily", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getDailyRssBooks() {
-        List<Books>  dailyRssBookDto = gutenbergResourceService.fetchDailyBookTitlesFromDb();
+        List<Books> dailyRssBookDto = gutenbergResourceService.fetchDailyBookTitlesFromDb();
         return new ResponseEntity<>(dailyRssBookDto, HttpStatus.OK);
     }
 
@@ -72,18 +72,21 @@ public class GutenbergReaderController {
 
     @RequestMapping(path = "/web/global/search/{searchElement}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Books>> searchBooksFromDatabase(@PathVariable(name = "searchElement") String searchElement) {
-        log.info("Rest call for Global Search Api : "+searchElement);
+        log.info("Rest call for Global Search Api : " + searchElement);
         List<Books> searchBooksLists = gutenbergResourceService.searchBooksFromDatabase(searchElement);
         return ResponseEntity.ok().body(searchBooksLists);
     }
 
     @RequestMapping(path = "/web/books/fetch/all/{page}/{size}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Books>> fetchBooks(@PathVariable(name = "size") Integer size,@PathVariable(name = "page") Integer page) {
-        log.info("Rest call for Fetch Book with size : {} : page {}",size,page);
-        List<Books> searchBooksLists = gutenbergResourceService.fetchAllBooksPageble(size,page);
-        return ResponseEntity.ok().body(searchBooksLists);
+    public ResponseEntity<?> fetchBooks(@PathVariable(name = "size") Integer size, @PathVariable(name = "page") Integer page) {
+        log.info("Rest call for Fetch Book with size : {} : page {}", size, page);
+        if (size < 50) {
+            List<Books> searchBooksLists = gutenbergResourceService.fetchAllBooksPageble(size, page);
+            return ResponseEntity.ok().body(searchBooksLists);
+        } else {
+            return ResponseEntity.badRequest().body("Size not Supported");
+        }
     }
-
 
 
     @RequestMapping(path = "/rss/book/daily/sync", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

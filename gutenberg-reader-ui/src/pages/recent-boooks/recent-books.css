@@ -43,7 +43,7 @@
     display: block;
     height:calc(100% - 40px);
     top: 40px;
-    width: calc(85% - 70px);
+    width: calc(100% - 70px);
 }
 
 .book-item{
