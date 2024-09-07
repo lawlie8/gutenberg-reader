@@ -15,7 +15,6 @@ import java.util.List;
 @Repository
 public interface BooksRepo extends JpaRepository<Books,Long> {
 
-    @Transactional
     @Query(value = "SELECT * FROM books where upload_date = :date",nativeQuery = true)
     public List<Books> getAllBooksForToday(String date);
 
