@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class GutenbergReaderController {
 
     @RequestMapping(path = "/rss/book/daily", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getDailyRssBooks() {
-        List<Books> dailyRssBookDto = gutenbergResourceService.fetchDailyBookTitlesFromDb();
+        List<Books> dailyRssBookDto = gutenbergResourceService.fetchDailyBookTitlesFromDb(new Date());
         return new ResponseEntity<>(dailyRssBookDto, HttpStatus.OK);
     }
 

@@ -61,10 +61,10 @@ public class AssetObjectFileProcessorService {
                 try {
                     log.debug("Adding Books Entity : {}", books.toString());
                     booksRepo.save(books);
+                    allBooks.add(books);
                 }catch (Exception e){
                     log.error("Exception While Saving Book Object :" +e.toString());
                 }
-                allBooks.add(books);
             }
             saveBlobObjects(allBooks);
         } catch (Exception e) {

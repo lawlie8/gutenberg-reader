@@ -9,6 +9,7 @@ import com.lawlie8.gutenbergreader.config.security.CustomUserDetails;
 import com.lawlie8.gutenbergreader.entities.Books;
 import com.lawlie8.gutenbergreader.repositories.BooksRepo;
 import com.lawlie8.gutenbergreader.util.XMLReaderUtilService;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.spi.LoggerContextFactory;
@@ -24,6 +25,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,11 +44,11 @@ public class GutenbergResourceService {
     Logger log = LoggerContext.getContext().getLogger(this.getClass().getName());
 
 
-    public boolean checkIfDailyRssFileExists(){
+    public boolean checkIfDailyRssFileExists() {
         return true;
     }
 
-    public boolean downloadDailyRssFile(){
+    public boolean downloadDailyRssFile() {
         return true;
     }
 
@@ -63,38 +66,56 @@ public class GutenbergResourceService {
         return null;
     }
 
-    public List<Books> fetchDailyBookTitlesFromDb(){
-        List<Books>  books = booksRepo.getAllBooksForToday(new Date());
-        return books;
+    /**
+     * Returns Latest Books From Database
+     * if no books exists on current day
+     * Recursively decrements day by one till it finds some data
+    * */
+    public List<Books> fetchDailyBookTitlesFromDb(Date dt) {
+
+        try {
+            Date date = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy").parse(String.valueOf(dt));
+            String formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+            List<Books> books = booksRepo.getAllBooksForToday(formattedDate);
+
+            if (books.isEmpty()) {
+                dt = DateUtils.addDays(dt, -1);
+                return fetchDailyBookTitlesFromDb(dt);
+            }
+            return books;
+        } catch (Exception e) {
+            log.error("Exception Occurred While Fetching Latest Books : " + e);
+            return null;
+        }
     }
 
-    public List<Books> searchBooksFromDatabase(String searchElement){
+    public List<Books> searchBooksFromDatabase(String searchElement) {
         List<Books> books = new ArrayList<>();
         try {
-            books = booksRepo.searchBooksByName("%"+searchElement+"%");
-        }catch (Exception e){
+            books = booksRepo.searchBooksByName("%" + searchElement + "%");
+        } catch (Exception e) {
             log.error("Exception Occurred While Searching Book with name : " + searchElement);
         }
         return books;
     }
 
 
-    public List<Books> fetchAllBooksPageble(Integer size,Integer page){
+    public List<Books> fetchAllBooksPageble(Integer size, Integer page) {
         List<Books> books = new ArrayList<>();
         try {
             Integer low = page * size;
-            books = booksRepo.findAllByPage(low,size);
-        }catch (Exception e){
-            log.error("Exception Occurred While Fetching Books for size {} : page {} : {}" ,size,page,e);
+            books = booksRepo.findAllByPage(low, size);
+        } catch (Exception e) {
+            log.error("Exception Occurred While Fetching Books for size {} : page {} : {}", size, page, e);
         }
         return books;
     }
 
-    public List<String> getAllUsers(){
+    public List<String> getAllUsers() {
         List<String> allUsers = new ArrayList<>();
         List<Object> principals = sessionRegistry.getAllPrincipals();
-        for (Object principal: principals) {
-            List<SessionInformation> session = sessionRegistry.getAllSessions(principal,false);
+        for (Object principal : principals) {
+            List<SessionInformation> session = sessionRegistry.getAllSessions(principal, false);
             session.get(0).expireNow();
             if (principal instanceof CustomUserDetails) {
                 allUsers.add(((CustomUserDetails) principal).getUsername());
@@ -103,7 +124,7 @@ public class GutenbergResourceService {
         return allUsers;
     }
 
-    private DailyRssBookDto convertJsonNodetoDTO(JsonNode node) throws Exception{
+    private DailyRssBookDto convertJsonNodetoDTO(JsonNode node) throws Exception {
         DailyRssBookDto dailyRssBookDto = new DailyRssBookDto();
         Channel channel = new Channel();
         channel.setTitle(node.get("channel").get("title").toString());
@@ -116,9 +137,9 @@ public class GutenbergResourceService {
         return dailyRssBookDto;
     }
 
-    private List<Item> convertJsonNodeToItemClass(JsonNode itemNode){
+    private List<Item> convertJsonNodeToItemClass(JsonNode itemNode) {
         List<Item> itemList = new ArrayList<>();
-        for(int i = 0;i<itemNode.size();i++){
+        for (int i = 0; i < itemNode.size(); i++) {
             Item item = new Item();
             item.setTitle(itemNode.get(i).get("title").toString());
             item.setDescription(itemNode.get(i).get("description").toString());
