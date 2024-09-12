@@ -1,5 +1,5 @@
 import { Route,Routes } from "react-router-dom";
-import Reader from "../pages/Reader";
+import Reader from "../pages/Reader/Reader";
 import RecentBooks from "../pages/recent-boooks/RecentBooks";
 import Login from "../pages/Login";
 import Explore from "../pages/explore/Explore";

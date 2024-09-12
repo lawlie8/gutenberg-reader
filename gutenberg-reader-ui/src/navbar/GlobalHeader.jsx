@@ -1,10 +1,8 @@
 import { Flex, Menu, notification, Input, List, Avatar } from 'antd';
 import { Link, NavLink, Route, useNavigate, Router, Routes } from 'react-router-dom';
 import React from "react";
-import Reader from '../pages/Reader';
-import GutenBergRoute from '../security/GutenBergRoute';
 import { LogoutOutlined } from '@ant-design/icons';
-import { END_GET_AUTH_LOGIN, END_GET_AUTH_LOGOUT, NAVBAR_SEARCH_API } from '../constants';
+import {END_GET_AUTH_LOGOUT, NAVBAR_SEARCH_API } from '../constants';
 import axios from 'axios';
 import './navbar.css'
 export default function GlobalHeader() {
