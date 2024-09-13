@@ -24,7 +24,6 @@ export default function RecentBooks() {
             try {
                 const response = await axios.get(GET_DAILY_RSS_BOOK_DATA, {});
                 setData(response.data);
-                console.log(data);
 
             } catch (err) {
                 console.log(err);

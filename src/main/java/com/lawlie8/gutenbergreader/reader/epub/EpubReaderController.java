@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/app")
 public class EpubReaderController {
@@ -19,7 +21,7 @@ public class EpubReaderController {
     private EpubReaderService epubReaderService;
 
     @RequestMapping(path = "/read",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> readEpubByMethod(@RequestBody EpubReaderRequestBodyClass epubReaderRequestBodyClass){
+    public ResponseEntity<?> readEpubByMethod(@RequestBody EpubReaderRequestBodyClass epubReaderRequestBodyClass) throws IOException {
         EpubContentDTO epubContentDTO = epubReaderService.getEpubContent(epubReaderRequestBodyClass);
         return new ResponseEntity<>(epubContentDTO,HttpStatus.OK);
     }
