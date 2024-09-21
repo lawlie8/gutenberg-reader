@@ -1,5 +1,8 @@
 package com.lawlie8.gutenbergreader.reader.epub;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.Channel;
 import com.lawlie8.gutenbergreader.reader.DTO.EpubContentDTO;
 import com.lawlie8.gutenbergreader.reader.DTO.EpubReaderRequestBodyClass;
 import com.lawlie8.gutenbergreader.repositories.BlobObjectsRepo;
@@ -9,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -24,7 +24,11 @@ public class EpubReaderService {
 
     Logger log = LoggerContext.getContext().getLogger(this.getClass().getName());
 
-    Map<String, File> zipFileList = new HashMap<>();
+    Map<String, byte[]> zipFileList = new HashMap<String, byte[]>();
+
+    private String osType = System.getProperty("os.name");
+
+    byte[] mimeTypeByteData = {97,112,112,108,105,99,97,116,105,111,110,47,101,112,117,98,43,122,105,112};
 
     public EpubContentDTO getEpubContent(EpubReaderRequestBodyClass epubReaderRequestBodyClass) throws IOException {
             return populateContent(epubReaderRequestBodyClass);
@@ -37,34 +41,49 @@ public class EpubReaderService {
     private EpubContentDTO populateContent(EpubReaderRequestBodyClass epubReaderRequestBodyClass) throws IOException {
         zipFileList = unZipAndReturnFiles(getEpubBytes(epubReaderRequestBodyClass.getBookId()));
         for(String i : zipFileList.keySet()){
-           System.out.println(zipFileList.get(i).getName());
            if(i.equals("mimetype")){
-               System.out.println(new FileInputStream(zipFileList.get(i)).readAllBytes().toString());
+               byte[] data = zipFileList.get(i);
+               if(Arrays.equals(data,mimeTypeByteData)){
+                   log.info("Valid Epub File Detected");
+                   String contentFileName = seeContainerXML(zipFileList.get("META-INF/container.xml"));
+                   fetchContent(zipFileList.get(contentFileName));
+               }
+               else{
+                   throw new IOException("Data Not a Valid Epub File");
+               }
            }
 
         }
         return new EpubContentDTO();
     }
 
+    private String seeContainerXML(byte[] xmlContainerData) throws IOException {
+        try {
+            XmlMapper xmlMapper = new XmlMapper();
+            JsonNode xmlJsonNode =  xmlMapper.readTree(xmlContainerData);
+            return xmlJsonNode.get("rootfiles").get("rootfile").get("full-path").toString();
+        }catch (Exception e){
+            throw new IOException("Container XML doesnt Contain data");
+        }
+    }
+
+    private void fetchContent(byte[] contentFileName){
+
+    }
+
     private byte[] getEpubBytes(Integer bookId) {
         return blobObjectsRepo.fetchEpubBlobById(bookId);
     }
 
-    private Map<String, File> unZipAndReturnFiles(byte[] epubByteArray) {
+    private Map<String, byte[]> unZipAndReturnFiles(byte[] epubByteArray) {
             ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(epubByteArray));
             try {
                 ZipEntry zipEntry;
                 while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-                    File destFile = new File(zipEntry.getName());
-                    FileOutputStream os = new FileOutputStream(destFile);
-                    for (int c = zipInputStream.read(); c != -1; c = zipInputStream.read()) {
-                        os.write(c);
-                    }
-                    os.close();
-                    zipFileList.put(zipEntry.getName(), destFile);
+                    zipFileList.put(zipEntry.getName(), zipInputStream.readAllBytes());
                 }
             } catch (Exception e) {
-                log.error(e);
+                //log.error(e);
             } finally {
                 try {
                     zipInputStream.close();

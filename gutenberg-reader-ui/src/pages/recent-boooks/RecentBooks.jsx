@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { GET_DAILY_RSS_BOOK_DATA } from "../../constants";
 import './recent-books.css';
 import BookItem from "./BookItem";
-import { Col, Divider, List, Row } from "antd";
+import { Col, Divider, List, Row, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 export default function RecentBooks() {
 
     const [data, setData] = useState([]);
-
+    const [loading,setLoading] = useState(false)
 
     const tesint = {
         backgroundColor: '#ecd8b1',
@@ -22,9 +23,10 @@ export default function RecentBooks() {
     useEffect(() => {
         const requestAPI = async () => {
             try {
+                setLoading(true)
                 const response = await axios.get(GET_DAILY_RSS_BOOK_DATA, {});
                 setData(response.data);
-
+                setLoading(false)
             } catch (err) {
                 console.log(err);
             }
@@ -38,14 +40,17 @@ export default function RecentBooks() {
                 <Row>
                     {
                         data.map((item, index) => (
-                            <Col style={{paddingBottom:'50px',paddingLeft:'100px'}}>
-                                <BookItem id={index} key={index} title={item?.title} bookId={item?.bookId} description={item?.description} />
+                            <Col style={{padding:'50px'}}>
+                                <BookItem id={index} key={index} title={item?.title} bookId={item?.bookId} description={item?.description} width={'240px'} />
                             </Col>
                         ))
                     }
                     </Row>
 
             </div>
+            <div style={{display:loading ? 'block' : 'none', position: 'fixed', top: '50%', left: '50%',transform:'translate(-50%.-50%)' }}>
+        <Spin indicator={<LoadingOutlined spin />} size="large" />
+      </div>
         </div>
     );
 }

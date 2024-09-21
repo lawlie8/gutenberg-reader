@@ -41,4 +41,14 @@ public class EpubReaderRequestBodyClass {
     public void setWordsPerPage(Integer wordsPerPage) {
         this.wordsPerPage = wordsPerPage;
     }
+
+    @Override
+    public String toString() {
+        return "EpubReaderRequestBodyClass{" +
+                "bookId=" + bookId +
+                ", startPage=" + startPage +
+                ", endPage=" + endPage +
+                ", wordsPerPage=" + wordsPerPage +
+                '}';
+    }
 }

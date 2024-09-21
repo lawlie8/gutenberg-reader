@@ -8,7 +8,7 @@ import Meta from 'antd/es/card/Meta';
 import React from 'react';
 import axios from 'axios';
 import { IMAGE_BLOB_DATA_URL, ZIP_BLOB_DATA_URL, EPUB_BLOB_DATA_URL } from '../../constants';
-export default function BookItem({ title, bookId, author, uploadDate }) {
+export default function BookItem({ title, bookId, author, uploadDate,width }) {
 
     const [downloadWindowFlag, setDownLoadWindowFlag] = React.useState(false);
     const [imageData, setImageData] = React.useState(null);
@@ -120,8 +120,8 @@ return (
 
         <Card
             hoverable
-            style={{ width: 240 }}
             loading={false}
+            style={{width: width}}
             cover={<img id={bookId} height="300px" width="200px" alt={title} src={imageData} />}
         >
             <Meta title={title} description={parseDescription(title)} />
