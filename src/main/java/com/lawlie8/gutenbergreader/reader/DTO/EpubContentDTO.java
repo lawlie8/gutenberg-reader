@@ -14,6 +14,8 @@ public class EpubContentDTO {
 
     private List<EpubPage> epubPageList;
 
+    private MetaData metaData;
+
     public Integer getBookId() {
         return bookId;
     }
@@ -52,5 +54,13 @@ public class EpubContentDTO {
 
     public void setEpubPageList(List<EpubPage> epubPageList) {
         this.epubPageList = epubPageList;
+    }
+
+    public MetaData getMetaData() {
+        return metaData;
+    }
+
+    public void setMetaData(MetaData metaData) {
+        this.metaData = metaData;
     }
 }
