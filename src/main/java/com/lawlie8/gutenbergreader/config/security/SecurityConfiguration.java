@@ -59,7 +59,9 @@ public class SecurityConfiguration{
         return httpSecurity.httpBasic((basic)-> basic.disable()).csrf((csrf) -> csrf.disable()).authorizeHttpRequests((auth) -> {
             auth.requestMatchers(AntPathRequestMatcher.antMatcher("/app/**")).authenticated();
             auth.requestMatchers(AntPathRequestMatcher.antMatcher("/web/**")).permitAll();
-        }).formLogin(httpSecurityFormLoginConfigurer -> {
+            auth.requestMatchers(AntPathRequestMatcher.antMatcher("/**")).permitAll();
+
+                }).formLogin(httpSecurityFormLoginConfigurer -> {
             httpSecurityFormLoginConfigurer
                     .successHandler(sucessHandler)
                     .failureHandler(failureHandler)

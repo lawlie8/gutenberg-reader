@@ -63,4 +63,16 @@ public class EpubContentDTO {
     public void setMetaData(MetaData metaData) {
         this.metaData = metaData;
     }
+
+    @Override
+    public String toString() {
+        return "EpubContentDTO{" +
+                "bookId=" + bookId +
+                ", startPage=" + startPage +
+                ", endPage=" + endPage +
+                ", wordsPerPage=" + wordsPerPage +
+                ", epubPageList=" + epubPageList +
+                ", metaData=" + metaData +
+                '}';
+    }
 }

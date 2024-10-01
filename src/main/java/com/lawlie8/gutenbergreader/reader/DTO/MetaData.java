@@ -3,6 +3,7 @@ package com.lawlie8.gutenbergreader.reader.DTO;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class MetaData {
 
@@ -12,7 +13,7 @@ public class MetaData {
     private Date date;
     private String rights;
     private List<String> subject;
-    private byte[] imageData;
+    private Map<String,byte[]> imageData;
     private String url;
 
     public String getTitle() {
@@ -63,11 +64,11 @@ public class MetaData {
         this.subject = subject;
     }
 
-    public byte[] getImageData() {
+    public Map<String, byte[]> getImageData() {
         return imageData;
     }
 
-    public void setImageData(byte[] imageData) {
+    public void setImageData(Map<String, byte[]> imageData) {
         this.imageData = imageData;
     }
 
@@ -88,7 +89,7 @@ public class MetaData {
                 ", date=" + date +
                 ", rights='" + rights + '\'' +
                 ", subject=" + subject +
-                ", imageData=" + Arrays.toString(imageData) +
+                ", imageData=" + imageData +
                 ", url='" + url + '\'' +
                 '}';
     }
