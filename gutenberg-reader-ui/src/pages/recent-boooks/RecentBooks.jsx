@@ -10,15 +10,7 @@ export default function RecentBooks() {
     const [data, setData] = useState([]);
     const [loading,setLoading] = useState(false)
 
-    const tesint = {
-        backgroundColor: '#ecd8b1',
-        left: '50%',
-        top: '50%',
-        zIndex: '-1',
-        position: 'absolute',
-        transform: 'translate(-50%,-50%)'
 
-    }
 
     useEffect(() => {
         const requestAPI = async () => {

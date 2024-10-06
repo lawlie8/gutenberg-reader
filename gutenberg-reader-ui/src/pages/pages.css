@@ -1,7 +1,7 @@
 .main-login {
     height: 240px;
     width: 270px;
-    position: absolute;
+    position: fixed;
     top: 45%;
     left:50%;
     margin: 0px;
@@ -12,6 +12,27 @@
     background-color: #001529   ;
     opacity:1;
     align-items: center;
+    z-index: 1;
+    animation: login-form 1s;
+}
+
+.main-signup {
+    height: 240px;
+    width: 270px;
+    position: fixed;
+    top: 45%;
+    left:50%;
+    margin: 0px;
+    transform: translate(-50%,-50%);
+    border: 1px solid #291400;
+    padding: 40px 10px 10px 10px;
+    border-radius: 15px ;
+    background-color: #291400   ;
+    opacity:1;
+    align-items: center;
+    z-index: 1;
+    animation: signup-form 1s;
+
 }
 
 .global-alert{
@@ -20,4 +41,51 @@
     right: 10px;
     width: 200px;
     border-radius: 0%;
+}
+
+.toggle-login-options{
+    padding: 0px;
+    margin: 0px;
+    position: absolute;
+    z-index:-1;
+    top: 45%;
+    left:50%;
+    transform: translate(245%,-146%);
+    height: 100px;
+    width:50px;
+    background-color: rgba(32, 157, 189,1);
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.signup-notification{
+    color: white;
+    padding-left: 30px;
+    position: absolute;
+}
+
+
+.login-logo-icon{
+    padding-left: 12px;
+    padding-bottom: 5px;
+}
+
+
+
+@keyframes signup-form {
+    0% {
+        background-color: #001529;
+      }
+      100% {
+        background-color: #291400;
+      }
+}
+
+@keyframes login-form {
+    0% {
+        background-color: #291400;
+      }
+      100% {
+        background-color: #001529;
+      }
 }

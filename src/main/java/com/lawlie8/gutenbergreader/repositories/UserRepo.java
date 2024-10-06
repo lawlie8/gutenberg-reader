@@ -11,4 +11,7 @@ public interface UserRepo extends JpaRepository<Users, Long> {
     @Query(value = "select * from users where user_name = :userName",nativeQuery = true)
     Users findByUserNameNative(String userName);
 
+    @Query(value = "select count(user_name) from users where user_name = :userName",nativeQuery = true)
+    Integer checkIfUserAlreadyExists(String userName);
+
 }
