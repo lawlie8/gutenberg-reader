@@ -59,6 +59,11 @@ public class GutenbergReaderController {
         return new ResponseEntity<>(assetObjectFileProcessorService.getBookCoverForId(bookId), HttpStatus.OK);
     }
 
+    @RequestMapping(path = "/byte/epub/asset/{bookId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> getBookEpubInByteForId(@PathVariable(name = "bookId") Long bookId) {
+        return new ResponseEntity<>(assetObjectFileProcessorService.getEpubBlobforDownload(bookId), HttpStatus.OK);
+    }
+
     @RequestMapping(path = "/blob/zip/asset/{assetId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> downloadZipForAssetId(@PathVariable(name = "assetId") Long assetId) {
         Resource resource = new ByteArrayResource(assetObjectFileProcessorService.getZipBlobforDownload(assetId));

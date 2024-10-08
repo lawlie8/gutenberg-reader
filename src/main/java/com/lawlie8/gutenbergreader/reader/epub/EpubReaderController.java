@@ -2,6 +2,7 @@ package com.lawlie8.gutenbergreader.reader.epub;
 
 import com.lawlie8.gutenbergreader.reader.DTO.EpubContentDTO;
 import com.lawlie8.gutenbergreader.reader.DTO.EpubReaderRequestBodyClass;
+import nl.siegmann.epublib.domain.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ public class EpubReaderController {
 
     @RequestMapping(path = "/read",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> readEpubByMethod(@RequestBody EpubReaderRequestBodyClass epubReaderRequestBodyClass) throws IOException, ParseException {
-        EpubContentDTO epubContentDTO = epubReaderService.getEpubContent(epubReaderRequestBodyClass);
+        Book epubContentDTO = epubReaderService.getEpubContent(epubReaderRequestBodyClass);
         return new ResponseEntity<>(epubContentDTO,HttpStatus.OK);
     }
 

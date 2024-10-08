@@ -13,4 +13,6 @@
 
 A Web Based Ebook Reader made in spring-boot and React
 
+## ScreenShots
 <img src="https://i.ibb.co/0V65BGN/Screenshot-67.png" alt="Screenshot-67" border="0"></a><br /><a target='_blank' href='https://freeonlinedice.com/'>
+<img src="https://i.ibb.co/ykpCRLr/Screenshot-2024-10-08-123340.png" alt="Screenshot-2024-10-08-123340" border="0">

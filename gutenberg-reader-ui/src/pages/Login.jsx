@@ -152,6 +152,7 @@ export default function Login() {
 
             <div className="main-login" style={{ display: loginUpFormDisplay() }}>
                 <img className="login-logo-icon"  src={require("./../utils/assets/book.png")} height="40px" width="40px" alt="book" style={{ paddingBottom: "5px" }}></img>
+                <h3 className="login-form-headline">Login with User</h3>
                 <Form style={{ paddingLeft: '20px', width: "250px" }} name="normal-login" className="login-form" initialValues={{ remember: true }} onFinish={AuthenticateUser}>
                     <Form.Item style={{ paddingTop: "10px" }} name="username" rules={[{ required: true, message: 'Please input your Username!' }]} >
                         <Input style={{ backgroundColor: "#15334e", color: "white" }} prefix={<UserOutlined className="site-form-item-icon" />} />
@@ -174,6 +175,7 @@ export default function Login() {
 
             <div className="main-signup" style={{ display: signUpFormDisplay() }}>
                 <img className="login-logo-icon"  src={require("./../utils/assets/register.png")} height="40px" width="40px" alt="book" style={{ paddingBottom: "5px" }}></img>
+                <h3 className="login-form-headline">Register User</h3>
                 <Form style={{ paddingLeft: '20px', width: "250px" }} name="normal-signup" className="login-form" initialValues={{ remember: true }} onFinish={CreateNewUser}>
                     <Form.Item style={{ paddingTop: "10px" }} name="signupUsername" rules={[{ required: true, message: 'Select Username!' }]} >
                         <Input style={{ backgroundColor: "#15334e", color: "white" }} prefix={<UserOutlined className="site-form-item-icon" />} onInput={(e) => checkForUser(e)} />

@@ -3,10 +3,13 @@ package com.lawlie8.gutenbergreader.reader.epub;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.Channel;
+import com.lawlie8.gutenbergreader.entities.Books;
 import com.lawlie8.gutenbergreader.reader.DTO.EpubContentDTO;
 import com.lawlie8.gutenbergreader.reader.DTO.EpubReaderRequestBodyClass;
 import com.lawlie8.gutenbergreader.reader.DTO.MetaData;
 import com.lawlie8.gutenbergreader.repositories.BlobObjectsRepo;
+import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.epub.EpubReader;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +36,10 @@ public class EpubReaderService {
 
     byte[] mimeTypeByteData = {97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 47, 101, 112, 117, 98, 43, 122, 105, 112};
 
-    public EpubContentDTO getEpubContent(EpubReaderRequestBodyClass epubReaderRequestBodyClass) throws IOException, ParseException {
-        return populateContent(epubReaderRequestBodyClass);
+    public Book getEpubContent(EpubReaderRequestBodyClass epubReaderRequestBodyClass) throws IOException, ParseException {
+        EpubReader epubReader = new EpubReader();
+        Book book = epubReader.readEpub(new ByteArrayInputStream(getEpubBytes(epubReaderRequestBodyClass.getBookId())));
+        return book;
     }
 
     private boolean checkManifest(Integer bookId) {
@@ -99,11 +104,16 @@ public class EpubReaderService {
     }
 
     private String parseAuthor(JsonNode input) {
-        String author = "";
-        if (input.get("id").toString().replace("\"", "").equals("author_0")) {
-            author = input.get("").toString().replace("\"", "");
+        try {
+            String author = "";
+            if (input.get("id").toString().replace("\"", "").equals("author_0")) {
+                author = input.get("").toString().replace("\"", "");
+            }
+            return author;
+        }catch (Exception e){
+            log.error("Exception Occurred While Fetching Author : ",e);
+            return "Un-Known";
         }
-        return author;
     }
 
     private Date parseEpubDate(JsonNode input){
