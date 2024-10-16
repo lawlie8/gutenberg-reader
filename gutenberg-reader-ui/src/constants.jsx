@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:8090";
+export const BASE_URL = "https://bug-proven-allegedly.ngrok-free.app";
 export const END_GET_APPLICATION_PROPERTIES = BASE_URL + "/web/application/properties/version";
 export const END_GET_AUTH_LOGIN = BASE_URL + '/web/auth';
 export const END_GET_AUTH_SIGNUP = BASE_URL + '/web/signup';

@@ -25,23 +25,15 @@
     left: 90%;
 }
 
-/* .download-book-icon:hover{
-    position: relative;
-    display: block;
-    z-index: 1;
-    top: 5px;
-    left: 60%;
-    transition: all ease 0.5s;
-    border-radius: 10px;
-} */
 
 
 .recent-books-container{
     position: absolute;
-    display: block;
     height:calc(100% - 40px);
-    top: 40px;
     width: calc(100% - 70px);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
 }
 
 .book-item{

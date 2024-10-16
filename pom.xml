@@ -193,6 +193,13 @@
                                 <copy todir="${project.build.directory}/classes/public">
                                     <fileset dir="${project.basedir}/gutenberg-reader-ui/build"/>
                                 </copy>
+                                <copy todir="${project.build.directory}/${project.artifactId}-${project.version}/META-INF">
+                                    <fileset dir="${project.basedir}/src/main/resources/" includes="context.xml"/>
+                                </copy>
+                                <copy todir="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF">
+                                    <fileset dir="${project.basedir}/src/main/resources/" includes="rewrite.config"/>
+                                </copy>
+
                             </target>
                         </configuration>
                         <goals>

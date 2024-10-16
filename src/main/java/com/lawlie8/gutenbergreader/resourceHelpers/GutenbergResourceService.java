@@ -2,11 +2,13 @@ package com.lawlie8.gutenbergreader.resourceHelpers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.BooksDTO;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.DailyRssBookDto;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.Channel;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.item.Item;
 import com.lawlie8.gutenbergreader.config.security.CustomUserDetails;
 import com.lawlie8.gutenbergreader.entities.Books;
+import com.lawlie8.gutenbergreader.repositories.BlobObjectsRepo;
 import com.lawlie8.gutenbergreader.repositories.BooksRepo;
 import com.lawlie8.gutenbergreader.util.XMLReaderUtilService;
 import org.apache.commons.lang3.time.DateUtils;
@@ -40,6 +42,9 @@ public class GutenbergResourceService {
 
     @Autowired
     private BooksRepo booksRepo;
+
+    @Autowired
+    private BlobObjectsRepo blobObjectsRepo;
 
     Logger log = LoggerContext.getContext().getLogger(this.getClass().getName());
 
@@ -89,14 +94,22 @@ public class GutenbergResourceService {
         }
     }
 
-    public List<Books> searchBooksFromDatabase(String searchElement) {
+    public List<BooksDTO> searchBooksFromDatabase(String searchElement) {
         List<Books> books = new ArrayList<>();
+        List<BooksDTO> booksDTOList = new ArrayList<>();
         try {
             books = booksRepo.searchBooksByName("%" + searchElement + "%");
+            for (Books books1 : books){
+                BooksDTO booksDTO = new BooksDTO();
+                booksDTO.setBookId(books1.getBookId());
+                booksDTO.setTitle(books1.getTitle());
+                booksDTO.setImageData(blobObjectsRepo.fetchBlobByIdAndType(books1.getBookId(),"picture"));
+                booksDTOList.add(booksDTO);
+            }
         } catch (Exception e) {
             log.error("Exception Occurred While Searching Book with name : " + searchElement);
         }
-        return books;
+        return booksDTOList;
     }
 
 

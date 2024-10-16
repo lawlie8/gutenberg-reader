@@ -10,10 +10,10 @@
 .explore-main{
     position: absolute;
     display: block;
-    left: calc(18%);
+    left: calc(0%);
     height:100vh;
     top: 40px;
-    width: calc(85% - 70px);
+    width: calc(100% - 70px);
 }
 
 .explore-navbar-content{

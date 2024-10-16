@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.Year;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "books")

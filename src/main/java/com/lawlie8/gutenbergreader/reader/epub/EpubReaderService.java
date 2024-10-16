@@ -144,7 +144,7 @@ public class EpubReaderService {
     }
 
     private byte[] getEpubBytes(Integer bookId) {
-        return blobObjectsRepo.fetchEpubBlobById(bookId);
+        return blobObjectsRepo.fetchBlobByIdAndType(bookId,"epub");
     }
 
     private Map<String, byte[]> unZipAndReturnFiles(byte[] epubByteArray) {

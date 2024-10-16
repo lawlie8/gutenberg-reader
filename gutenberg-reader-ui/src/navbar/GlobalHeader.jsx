@@ -1,8 +1,8 @@
 import { Flex, Menu, notification, Input, List, Avatar } from 'antd';
-import { Link, NavLink, Route, useNavigate, Router, Routes, useLocation } from 'react-router-dom';
-import React from "react";
+import { Link, NavLink, Route, useNavigate, Router, Routes, useLocation, createSearchParams } from 'react-router-dom';
+import React, { useRef } from "react";
 import { LogoutOutlined } from '@ant-design/icons';
-import {END_GET_AUTH_LOGOUT, NAVBAR_SEARCH_API } from '../constants';
+import { END_GET_AUTH_LOGOUT, NAVBAR_SEARCH_API,IMAGE_BLOB_DATA_URL } from '../constants';
 import axios from 'axios';
 import './navbar.css'
 export default function GlobalHeader() {
@@ -10,6 +10,26 @@ export default function GlobalHeader() {
     const navigate = useNavigate();
     const [searchData, setSearchData] = React.useState([]);
     const { Search } = Input;
+
+
+    const [windowSize, setWindowSize] = React.useState(getWindowSize());
+
+    React.useEffect(() => {
+      function handleWindowResize() {
+        setWindowSize(getWindowSize());
+      }
+  
+      window.addEventListener('resize', handleWindowResize);
+  
+      return () => {
+        window.removeEventListener('resize', handleWindowResize);
+      };
+    }, []);
+
+    function getWindowSize() {
+        const {innerWidth, innerHeight} = window;
+        return {innerWidth, innerHeight};
+      }
 
     const headerStyle = {
         textAlign: 'center',
@@ -22,15 +42,17 @@ export default function GlobalHeader() {
         zIndex: '23'
     };
 
-    const logoutIconStyle = {
-        color: "white",
-        zIndex: "111",
-        position: "fixed",
-        right: "0px",
-        top: "14px",
-        paddingRight: "10px"
+    const verticalHeaderStyle = {
+        textAlign: 'center',
+        color: '#fff',
+        position: 'fixed',
+        top: '0px',
+        left: '0px',
+        margin: '0px',
+        width: 'calc(25%)',
+        height:'calc(100%)',
+        zIndex: '23'
     };
-
 
     const items = getNavBarItems().map((item, index) => ({
         key: `${item.path}`,
@@ -58,6 +80,8 @@ export default function GlobalHeader() {
             } catch {
 
             }
+        }else {
+            setSearchData([])
         }
 
     }
@@ -123,36 +147,55 @@ export default function GlobalHeader() {
         }
     }
 
+
+    function manageReadLocal(bookId) {
+        localStorage.setItem('bookId',`${bookId}`);
+        navigate({
+            pathname: "/reader",
+            search: `?${createSearchParams({
+                bookId: `${bookId}`            
+            })}`
+        });
+        setSearchTerm("");
+    }
+
     return (
         <div style={{ display: checkNavigation() }}>
             <Menu
                 theme='dark'
-                mode='horizontal'
+                mode={'horizontal'}
                 defaultSelectedKeys={['1']}
                 items={items}
                 style={headerStyle}
+                inlineCollapsed={windowSize.innerWidth < 500 ? true : false}
                 onClick={({ key }) => navigate(key)}
             >
             </Menu>
+
+
+            <Flex className='logout-icon-grp' gap={'middle'}>
             <Search className='navbar-search' placeholder="Search" onSearch={onSearch} enterButton onKeyUp={(e) => setKeyTerm(e)} />
             <div className='global-search-list' style={{ display: checkSearchVisibility() }}>
                 <List>
                     {
                         searchData.map((item, index) => (
-                            <List.Item className='global-search-list-item' key={index}>
-                                <img></img> {item.title}
+                            <List.Item className='global-search-list-item' style={{padding:'10px'}} key={index} onClick={() => manageReadLocal(item.bookId)}>
+                                <Flex>
+                                <img style={{height:'60px',width:'45px',paddingLeft:'10px',paddingRight:'10px'}} src={"data:image/png;base64," + item.imageData} ></img> {item.title}
+                                </Flex>
                             </List.Item>
                         ))
                     }
                 </List>
 
             </div>
-            <LogoutOutlined style={logoutIconStyle} onClick={logutCurrentUser} />
+               <LogoutOutlined onClick={logutCurrentUser} style={{color:'red'}} />
+            </Flex>
         </div>
     );
 
-
 }
+
 
 
 function getNavBarItems() {

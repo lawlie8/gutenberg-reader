@@ -12,8 +12,9 @@ export default function Explore() {
   const [currentRenderedBooks, setCurrentRenderedBooks] = useState([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
-
+  const [type,setType] = useState(['title'])
   const { ref: myRef, inView } = useInView(false);
+
 
 
   useEffect(() => {
@@ -70,8 +71,8 @@ export default function Explore() {
           label: 'English'
         },
         {
-          key: 'Finish',
-          label: 'Finish'
+          key: 'Finnish',
+          label: 'Finnish'
         },
         {
           key: 'Spanish',
@@ -227,8 +228,7 @@ export default function Explore() {
   ]
 
   const onClickMenu = (e) => {
-    console.log(e);
-
+    localStorage.setItem('type',e.keyPath);
   }
 
   const siderStyle = {
@@ -247,9 +247,9 @@ export default function Explore() {
   return (
     <>
       <div style={globalReaderStyle} className="explore" >
-        <Menu mode="vertical" style={{ width: '300px', height: '100vh', overflow: "auto", position: 'fixed', backgroundColor: 'white', padding: '0px', margin: '0px', left: '0px', top: '45px', height: 'calc(100% - 40px)', boxShadow: '1px 0px 10px rgb(131, 82, 82)' }} mode="inline" items={items} onClick={onClickMenu} />
+        {/* <Menu mode="vertical" style={{ width: '300px', height: '100vh', overflow: "auto", position: 'fixed', backgroundColor: 'white', padding: '0px', margin: '0px', left: '0px', top: '45px', height: 'calc(100% - 40px)', boxShadow: '1px 0px 10px rgb(131, 82, 82)' }} items={items} onClick={onClickMenu} /> */}
         <div id="className" className="explore-main">
-          <Row gutter={1}>
+          <Row>
             {
               currentRenderedBooks.map((item, index) => (
                 <Col style={{padding:'50px'}} ref={currentRenderedBooks.length - 1 === index ? myRef : null}>

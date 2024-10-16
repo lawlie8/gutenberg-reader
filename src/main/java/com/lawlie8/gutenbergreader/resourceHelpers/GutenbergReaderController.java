@@ -1,6 +1,7 @@
 package com.lawlie8.gutenbergreader.resourceHelpers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.BooksDTO;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.DailyRssBookDto;
 import com.lawlie8.gutenbergreader.entities.Books;
 import com.lawlie8.gutenbergreader.util.XMLReaderUtilService;
@@ -77,9 +78,9 @@ public class GutenbergReaderController {
     }
 
     @RequestMapping(path = "/web/global/search/{searchElement}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Books>> searchBooksFromDatabase(@PathVariable(name = "searchElement") String searchElement) {
+    public ResponseEntity<List<BooksDTO>> searchBooksFromDatabase(@PathVariable(name = "searchElement") String searchElement) {
         log.info("Rest call for Global Search Api : " + searchElement);
-        List<Books> searchBooksLists = gutenbergResourceService.searchBooksFromDatabase(searchElement);
+        List<BooksDTO> searchBooksLists = gutenbergResourceService.searchBooksFromDatabase(searchElement);
         return ResponseEntity.ok().body(searchBooksLists);
     }
 

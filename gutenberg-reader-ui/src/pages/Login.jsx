@@ -148,7 +148,7 @@ export default function Login() {
                 />}
 
             
-            <img src={require("./../utils/assets/ivy-png.png")} style={{ height: "calc(99%)" }}></img>
+            <img src={require("./../utils/assets/ivy-png.png")} style={{ height: "calc(99%)",zIndex:'-10',position:'fixed'}}></img>
 
             <div className="main-login" style={{ display: loginUpFormDisplay() }}>
                 <img className="login-logo-icon"  src={require("./../utils/assets/book.png")} height="40px" width="40px" alt="book" style={{ paddingBottom: "5px" }}></img>

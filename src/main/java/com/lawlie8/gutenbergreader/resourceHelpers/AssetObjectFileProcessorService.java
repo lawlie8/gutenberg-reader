@@ -3,6 +3,7 @@ package com.lawlie8.gutenbergreader.resourceHelpers;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.DailyRssBookDto;
 import com.lawlie8.gutenbergreader.entities.BlobObjects;
 import com.lawlie8.gutenbergreader.entities.Books;
+import com.lawlie8.gutenbergreader.reader.DTO.Constants;
 import com.lawlie8.gutenbergreader.repositories.BlobObjectsRepo;
 import com.lawlie8.gutenbergreader.repositories.BooksRepo;
 import jakarta.transaction.Transactional;
@@ -25,15 +26,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 @Service
 public class AssetObjectFileProcessorService {
 
     @Autowired
     GutenbergResourceService gutenbergResourceService;
-    private static final String BOOK_TYPE_GUTENBERG_UPLOAD = "gutenberg_upload";
-    private static final String GUTENBERG_ZIP_PREFIX = "https://www.gutenberg.org/cache/epub/%s/pg%s-h.zip";
-    private static final String GUTENBERG_EBOOK_PREFIX = "https://www.gutenberg.org/ebooks/%s.epub3.images";
-    private static final String GUTENBERG_IMAGE_PREFIX = "https://www.gutenberg.org/cache/epub/%s/pg%s.cover.medium.jpg";
+
 
     @Autowired
     private BooksRepo booksRepo;
@@ -53,7 +52,7 @@ public class AssetObjectFileProcessorService {
                 books.setTitle(dailyRssBookDto.getChannel().getItem().get(i).getTitle().replace("\"", ""));
                 books.setBookDescription(dailyRssBookDto.getChannel().getItem().get(i).getDescription().replace("\"", ""));
                 books.setBookLanguage(parseBookLanguage(dailyRssBookDto.getChannel().getItem().get(i).getDescription().replace("\"", "")));
-                books.setBookType(BOOK_TYPE_GUTENBERG_UPLOAD);
+                books.setBookType(Constants.BOOK_TYPE_GUTENBERG_UPLOAD);
                 books.setBookId(parseBookId(dailyRssBookDto.getChannel().getItem().get(i).getLink()));
                 books.setAuthor(parseBookAuthor(dailyRssBookDto.getChannel().getItem().get(i).getTitle()));
                 books.setUploadDate(new Date());
@@ -75,19 +74,11 @@ public class AssetObjectFileProcessorService {
 
     private void saveBlobObjects(List<Books> allBooks) throws SQLException, IOException {
         try {
-            List<BlobObjects> blobObjectsList = new ArrayList<>();
             for (int i = 0; i < allBooks.size(); i++) {
                 Books books = allBooks.get(i);
-                blobObjectsList.add(saveZipBlob(books.getBookId()));
-                blobObjectsList.add(saveImageBlob(books.getBookId()));
-                blobObjectsList.add(saveEbookObject(books.getBookId()));
-            }
-            for(int i = 0;i<blobObjectsList.size();i++){
-                try {
-                    blobObjectsRepo.save(blobObjectsList.get(i));
-                }catch (Exception e){
-                    log.error("Exception Occurred While Saving Blob Object with id" + blobObjectsList.get(i).getBookId());
-                }
+                blobObjectsRepo.save(saveZipBlob(books.getBookId()));
+                blobObjectsRepo.save(saveImageBlob(books.getBookId()));
+                blobObjectsRepo.save(saveEbookObject(books.getBookId()));
             }
         } catch (Exception e) {
             log.error("Exception Occurred While Saving Blob Objects with error message : ", e);
@@ -95,15 +86,15 @@ public class AssetObjectFileProcessorService {
     }
 
     public byte[] getBookCoverForId(Long bookId) {
-        return blobObjectsRepo.fetchImageBlobById(bookId);
+        return blobObjectsRepo.fetchBlobByIdAndType(bookId, Constants.IMAGE_TYPE);
     }
 
     public byte[] getZipBlobforDownload(Long assetId) {
-        return blobObjectsRepo.fetchZipBlobById(assetId);
+        return blobObjectsRepo.fetchBlobByIdAndType(assetId,Constants.ZIP_TYPE);
     }
 
     public byte[] getEpubBlobforDownload(Long assetId) {
-        return blobObjectsRepo.fetchEpubBlobById(assetId);
+        return blobObjectsRepo.fetchBlobByIdAndType(assetId,Constants.EPUB_TYPE);
     }
 
     private BlobObjects saveEbookObject(Long bookId) throws IOException, SQLException {
@@ -112,7 +103,7 @@ public class AssetObjectFileProcessorService {
             BlobObjects blobObjects = new BlobObjects();
             InputStream is = null;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            URL website = new URL(String.format(GUTENBERG_EBOOK_PREFIX, bookId.toString()));
+            URL website = new URL(String.format(Constants.GUTENBERG_EBOOK_PREFIX, bookId.toString()));
             is = website.openStream();
             byte[] bytes = null;
             bytes = IOUtils.toByteArray(is);
@@ -138,7 +129,7 @@ public class AssetObjectFileProcessorService {
             BlobObjects blobObjects = new BlobObjects();
             InputStream is = null;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            URL website = new URL(String.format(GUTENBERG_IMAGE_PREFIX, bookId.toString(), bookId.toString()));
+            URL website = new URL(String.format(Constants.GUTENBERG_IMAGE_PREFIX, bookId.toString(), bookId.toString()));
             is = website.openStream();
             byte[] bytes = null;
             bytes = IOUtils.toByteArray(is);
@@ -165,7 +156,7 @@ public class AssetObjectFileProcessorService {
             BlobObjects blobObjects = new BlobObjects();
             InputStream is = null;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            URL website = new URL(String.format(GUTENBERG_ZIP_PREFIX, bookId.toString(), bookId));
+            URL website = new URL(String.format(Constants.GUTENBERG_ZIP_PREFIX, bookId.toString(), bookId));
             is = website.openStream();
             byte[] bytes = null;
             bytes = IOUtils.toByteArray(is);
