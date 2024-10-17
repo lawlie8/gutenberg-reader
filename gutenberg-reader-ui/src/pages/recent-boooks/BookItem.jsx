@@ -103,7 +103,7 @@ export default function BookItem({ title, bookId, author, uploadDate,width }) {
 
 
 return (
-    <div className="book-item" >
+    <div className="book-item" onClick={() => manageReadLocal(bookId)}>
         <div className="download-book-icon">
             <MoreOutlined onClick={() => openDownloadOptionPop(bookId)} style={{ fontSize: '18px', color: 'black' }} />
             <div className="download-book-item-option-list" style={{ display: checkNavigation() }}>

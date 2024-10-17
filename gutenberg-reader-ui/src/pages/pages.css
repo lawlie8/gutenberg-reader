@@ -44,24 +44,14 @@
 }
 
 .toggle-login-options{
-    padding: 0px;
-    margin: 0px;
-    position: absolute;
-    z-index:-1;
-    top: 45%;
-    left:50%;
-    transform: translate(245%,-146%);
-    height: 100px;
-    width:50px;
-    background-color: rgba(32, 157, 189,1);
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
+   position: relative;
 }
 
 .signup-notification{
     color: white;
-    padding-left: 30px;
-    position: absolute;
+    padding-left: 20px;
+    position: relative;
+    top: -10px;
 }
 
 

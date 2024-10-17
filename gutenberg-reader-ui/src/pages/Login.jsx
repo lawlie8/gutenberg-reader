@@ -1,4 +1,4 @@
-import { Button, Flex, Form, Input, message, notification, Tag } from "antd";
+import { Button, Flex, Form, Input, message, notification, Tag, Row, Col } from "antd";
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import './pages.css'
 import { useNavigate } from "react-router-dom";
@@ -26,15 +26,13 @@ export default function Login() {
 
     const navigate = useNavigate();
     const [formFlag, setFormFlag] = React.useState(false);
-
     const [signupOptionButton, setSignupButtonOption] = React.useState(true);
     const [userNameCheckTerm, setUserNameCheckTerm] = React.useState('')
     const [lockedUserNameCheck, setLockedUserNameCheck] = React.useState('')
-
     const [isUserValid, setIsUserValid] = React.useState()
 
 
-
+    //Authenticate User
     function AuthenticateUser(values) {
         setFormFlag(false);
         axios.post(END_GET_AUTH_LOGIN, {
@@ -55,6 +53,7 @@ export default function Login() {
 
     }
 
+    //Create New User
     function CreateNewUser(signupValues) {
         axios.post(END_GET_AUTH_SIGNUP, {
             username: signupValues.signupUsername,
@@ -80,10 +79,29 @@ export default function Login() {
                 duration: 1,
                 description: "Something Went Wrong",
                 style: { width: '250px' }
-        })
+            })
         });
 
     }
+
+    //Check User id is available
+    React.useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            if (userNameCheckTerm.length > 0) {
+                try {
+                    axios.get(CHECK_IF_USER_IS_VALID + `${userNameCheckTerm}`).then(res => {
+                        setIsUserValid(res.data);
+                        setLockedUserNameCheck(userNameCheckTerm)
+                        validateUsername()
+                    })
+                } catch {
+                    console.log("Cannot Check User Id")
+                }
+            }
+        }, 500)
+
+        return () => clearTimeout(delayDebounceFn)
+    }, [userNameCheckTerm])
 
     function toggleSignUpoptions() {
         setSignupButtonOption(!signupOptionButton)
@@ -105,34 +123,16 @@ export default function Login() {
         }
     }
 
-    React.useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            if (userNameCheckTerm.length > 0) {
-                try {
-                    axios.get(CHECK_IF_USER_IS_VALID + `${userNameCheckTerm}`).then(res => {
-                        setIsUserValid(res.data);
-                        setLockedUserNameCheck(userNameCheckTerm)
-                        validateUsername()
-                    })
-                } catch {
-    
-                }
-            }
-        }, 1000)
-
-        return () => clearTimeout(delayDebounceFn)
-    }, [userNameCheckTerm])
-
-    function checkForUser(value){
+    function checkForUser(value) {
         if (value.nativeEvent !== undefined) {
-        {   
-            setUserNameCheckTerm(value.target.value)
+            {
+                setUserNameCheckTerm(value.target.value)
+            }
         }
     }
-}
 
-    function validateUsername(){
-       return isUserValid &&  userNameCheckTerm.length !== 0 && lockedUserNameCheck === userNameCheckTerm
+    function validateUsername() {
+        return isUserValid && userNameCheckTerm.length !== 0 && lockedUserNameCheck === userNameCheckTerm
     }
 
 
@@ -147,11 +147,10 @@ export default function Login() {
                     showIcon
                 />}
 
-            
-            <img src={require("./../utils/assets/ivy-png.png")} style={{ height: "calc(99%)",zIndex:'-10',position:'fixed'}}></img>
+            <img src={require("./../utils/assets/ivy-png.png")} style={{ height: "calc(99%)", zIndex: '-10', position: 'fixed' }}></img>
 
             <div className="main-login" style={{ display: loginUpFormDisplay() }}>
-                <img className="login-logo-icon"  src={require("./../utils/assets/book.png")} height="40px" width="40px" alt="book" style={{ paddingBottom: "5px" }}></img>
+                <img className="login-logo-icon" src={require("./../utils/assets/book.png")} height="40px" width="40px" alt="book" style={{ paddingBottom: "5px" }}></img>
                 <h3 className="login-form-headline">Login with User</h3>
                 <Form style={{ paddingLeft: '20px', width: "250px" }} name="normal-login" className="login-form" initialValues={{ remember: true }} onFinish={AuthenticateUser}>
                     <Form.Item style={{ paddingTop: "10px" }} name="username" rules={[{ required: true, message: 'Please input your Username!' }]} >
@@ -161,42 +160,48 @@ export default function Login() {
                     <Form.Item name="password" rules={[{ required: true, message: 'Please input your Password!' }]}>
                         <Input style={{ backgroundColor: "#15334e", color: "white" }} prefix={<LockOutlined className="site-form-item-icon" />} type="password" />
                     </Form.Item>
-
-                    <Form.Item style={{ paddingTop: "0px" }} label={formFlag}>
-                        <Button type="primary" htmlType="submit" className="login-form-button" style={{ float: "right", backgroundColor: "#15334e" }}>Log in</Button>
-                    </Form.Item>
+                    <Row >
+                        <Col span={8}>
+                            <Button className="toggle-login-options" onClick={() => toggleSignUpoptions()} type="primary">Switch To Sign-Up</Button>
+                        </Col>
+                        <Col span={8} offset={8}>
+                            <Form.Item style={{ paddingTop: "0px" }} label={formFlag}>
+                                <Button type="primary" htmlType="submit" className="login-form-button" style={{ float: "right", backgroundColor: "#15334e" }}>Log in</Button>
+                            </Form.Item>
+                        </Col>
+                    </Row>
                 </Form>
             </div>
 
-
-
-            <div className="toggle-login-options" onClick={() => toggleSignUpoptions()}>
-            </div>
-
             <div className="main-signup" style={{ display: signUpFormDisplay() }}>
-                <img className="login-logo-icon"  src={require("./../utils/assets/register.png")} height="40px" width="40px" alt="book" style={{ paddingBottom: "5px" }}></img>
+                <img className="login-logo-icon" src={require("./../utils/assets/register.png")} height="40px" width="40px" alt="book" style={{ paddingBottom: "5px" }}></img>
                 <h3 className="login-form-headline">Register User</h3>
                 <Form style={{ paddingLeft: '20px', width: "250px" }} name="normal-signup" className="login-form" initialValues={{ remember: true }} onFinish={CreateNewUser}>
                     <Form.Item style={{ paddingTop: "10px" }} name="signupUsername" rules={[{ required: true, message: 'Select Username!' }]} >
                         <Input style={{ backgroundColor: "#15334e", color: "white" }} prefix={<UserOutlined className="site-form-item-icon" />} onInput={(e) => checkForUser(e)} />
                     </Form.Item>
-
                     <Form.Item name="signupPassword" rules={[{ required: true, message: 'Please input your Password!' }]}>
                         <Input style={{ backgroundColor: "#15334e", color: "white" }} prefix={<LockOutlined className="site-form-item-icon" />} type="password" />
                     </Form.Item>
-
-                    <Form.Item style={{ paddingTop: "0px" }} label={formFlag}>
-                        <Button type="primary" disabled= {validateUsername()} htmlType="submit" className="login-form-button" style={{ float: "right", backgroundColor: "#15334e" }}>Signup</Button>
-                    </Form.Item>
+                    <Row>
+                        <Col span={8}>
+                            <Button className="toggle-login-options" onClick={() => toggleSignUpoptions()} type="primary">Switch To Login</Button>
+                        </Col>
+                        <Col span={8} offset={8}>
+                            <Form.Item style={{ paddingTop: "0px" }} label={formFlag}>
+                                <Button type="primary" disabled={validateUsername()} htmlType="submit" className="login-form-button" style={{ float: "right", backgroundColor: "#15334e" }}>Signup</Button>
+                            </Form.Item>
+                        </Col>
+                    </Row>
                 </Form>
                 {
-                    validateUsername() && <div className="signup-notification">User <Tag color="magenta" bordered={false} style={{ margin:'0px'}}>{userNameCheckTerm}</Tag> Already Exists </div>
+                    validateUsername() === true ?
+                        <div className="signup-notification">User <Tag color="magenta" bordered={false} style={{ margin: '0px' }}>{userNameCheckTerm}</Tag> Already Exists </div> :
+                        userNameCheckTerm !== "" ?
+                            <div className="signup-notification">User <Tag color="green" bordered={false} style={{ margin: '0px' }}>{userNameCheckTerm}</Tag> is Available </div> : ""
                 }
+
             </div>
-
-
         </div>
     );
-
-
 }
