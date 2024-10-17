@@ -6,8 +6,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import axios from 'axios';
 import { CHECK_IF_USER_IS_VALID, END_GET_AUTH_LOGIN, END_GET_AUTH_SIGNUP } from '../constants';
 import Alert from "antd/es/alert/Alert";
-import useNotification from "antd/es/notification/useNotification";
-import NotificationElement from "../utils/NotificationElement";
 import { Buffer } from 'buffer';
 
 const globalReaderStyle = {

@@ -1,4 +1,4 @@
-import { Col, List, Menu, Radio, Row, Spin } from "antd";
+import { Col, List, Menu, notification, Radio, Row, Spin } from "antd";
 import './explore.css'
 import { FETCH_BOOKS_BY_PAGE } from "../../constants";
 import axios from "axios";
@@ -44,6 +44,7 @@ export default function Explore() {
         response.data.map((booksData) => {
           setCurrentRenderedBooks(oldArray => [...oldArray, booksData])
         })
+        notification.success({message:"New Content Added",duration:1,style: { width: '250px' }});
         setLoading(false)
       }
       )
