@@ -12,7 +12,7 @@ export default function Explore() {
   const [currentRenderedBooks, setCurrentRenderedBooks] = useState([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [type,setType] = useState(['title'])
+  const [type, setType] = useState(['title'])
   const { ref: myRef, inView } = useInView(false);
 
 
@@ -20,7 +20,6 @@ export default function Explore() {
   useEffect(() => {
     if (inView) {
       setPage(page + 1)
-      console.log("inView");
     }
   }, [inView])
 
@@ -44,7 +43,7 @@ export default function Explore() {
         response.data.map((booksData) => {
           setCurrentRenderedBooks(oldArray => [...oldArray, booksData])
         })
-        notification.success({message:"New Content Added",duration:1,style: { width: '250px' }});
+        notification.success({ message: "New Content Added", duration: 1, style: { width: '250px' } });
         setLoading(false)
       }
       )
@@ -229,7 +228,7 @@ export default function Explore() {
   ]
 
   const onClickMenu = (e) => {
-    localStorage.setItem('type',e.keyPath);
+    localStorage.setItem('type', e.keyPath);
   }
 
   const siderStyle = {
@@ -253,7 +252,7 @@ export default function Explore() {
           <Row>
             {
               currentRenderedBooks.map((item, index) => (
-                <Col style={{padding:'50px'}} ref={currentRenderedBooks.length - 1 === index ? myRef : null}>
+                <Col style={{ padding: '50px' }} ref={currentRenderedBooks.length - 1 === index ? myRef : null}>
                   <BookItem id={index} key={index} title={item?.title} bookId={item?.bookId} description={item?.description} width={'240px'} />
                 </Col>
 
@@ -263,7 +262,7 @@ export default function Explore() {
         </div>
       </div>
 
-      <div style={{display:loading ? 'block' : 'none', position: 'fixed', top: '50%', left: '50%',transform:'translate(-50%.-50%)' }}>
+      <div style={{ display: loading ? 'block' : 'none', position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%.-50%)' }}>
         <Spin indicator={<LoadingOutlined spin />} size="large" />
       </div>
     </>

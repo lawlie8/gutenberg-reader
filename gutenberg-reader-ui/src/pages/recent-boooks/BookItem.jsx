@@ -61,33 +61,6 @@ export default function BookItem({ title, bookId, author, uploadDate,width }) {
         });
     }
 
-    function manageFileEpubDownload(bookId) {
-        axios.get(EPUB_BLOB_DATA_URL + `${bookId}`, { responseType: 'blob' })
-            .then(res => {
-                const url = window.URL.createObjectURL(new Blob([res.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', `asset_${bookId}.epub`);
-                document.body.appendChild(link);
-                link.click();
-            })
-    }
-
-    function manageFileZipDownload(bookId) {
-        axios.get(ZIP_BLOB_DATA_URL + `${bookId}`, { responseType: 'blob' })
-            .then(res => {
-                const url = window.URL.createObjectURL(new Blob([res.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', `asset_${bookId}.zip`);
-                document.body.appendChild(link);
-                link.click();
-            })
-    }
-
-    function manageLinkOutSource(bookId) {
-        window.location = `https://www.gutenberg.org/ebooks/${bookId}`;
-    }
 
     function FetechImageData(bookId) {
             React.useEffect(() => {
@@ -104,20 +77,6 @@ export default function BookItem({ title, bookId, author, uploadDate,width }) {
 
 return (
     <div className="book-item" onClick={() => manageReadLocal(bookId)}>
-        <div className="download-book-icon">
-            <MoreOutlined onClick={() => openDownloadOptionPop(bookId)} style={{ fontSize: '18px', color: 'black' }} />
-            <div className="download-book-item-option-list" style={{ display: checkNavigation() }}>
-                <List>
-                    <List.Item><ReadOutlined onClick={() => manageReadLocal(bookId)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
-                    <List.Item><BookOutlined onClick={() => manageFileEpubDownload(bookId)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
-                    <List.Item><FileZipOutlined onClick={() => manageFileZipDownload(bookId)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
-                    <List.Item><LinkOutlined onClick={() => manageLinkOutSource(bookId)} style={{ fontSize: '20px', color: 'white', paddingLeft: '2px' }} /></List.Item>
-                </List>
-            </div>
-        </div>
-
-
-
         <Card
             hoverable
             loading={false}

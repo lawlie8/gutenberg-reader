@@ -104,7 +104,7 @@ public class SecurityConfiguration{
 
     @Bean
     SessionInformationExpiredStrategy sessionInformationExpiredStrategy() {
-        return new CustomSessionInformationExpiredStrategy("/login");
+        return new CustomSessionInformationExpiredStrategy("/");
     }
 
     @Bean

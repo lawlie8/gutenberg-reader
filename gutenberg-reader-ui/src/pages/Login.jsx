@@ -3,7 +3,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import './pages.css'
 import { useNavigate } from "react-router-dom";
 import React, { useCallback, useEffect, useState } from "react";
-import axios from 'axios';
+import instance from '../utils/axios';
 import { CHECK_IF_USER_IS_VALID, END_GET_AUTH_LOGIN, END_GET_AUTH_SIGNUP } from '../constants';
 import Alert from "antd/es/alert/Alert";
 import { Buffer } from 'buffer';
@@ -33,7 +33,7 @@ export default function Login() {
     //Authenticate User
     function AuthenticateUser(values) {
         setFormFlag(false);
-        axios.post(END_GET_AUTH_LOGIN, {
+        instance.post(END_GET_AUTH_LOGIN, {
             username: values.username,
             password: values.password
         }, {
@@ -53,7 +53,7 @@ export default function Login() {
 
     //Create New User
     function CreateNewUser(signupValues) {
-        axios.post(END_GET_AUTH_SIGNUP, {
+        instance.post(END_GET_AUTH_SIGNUP, {
             username: signupValues.signupUsername,
             password: Buffer.from(signupValues.signupPassword).toString('base64')
         }, {
@@ -87,7 +87,7 @@ export default function Login() {
         const delayDebounceFn = setTimeout(() => {
             if (userNameCheckTerm.length > 0) {
                 try {
-                    axios.get(CHECK_IF_USER_IS_VALID + `${userNameCheckTerm}`).then(res => {
+                    instance.get(CHECK_IF_USER_IS_VALID + `${userNameCheckTerm}`).then(res => {
                         setIsUserValid(res.data);
                         setLockedUserNameCheck(userNameCheckTerm)
                         validateUsername()

@@ -1,4 +1,4 @@
-import axios from "axios";
+import instance from "../../utils/axios"
 import { useEffect, useState } from "react";
 import { GET_DAILY_RSS_BOOK_DATA } from "../../constants";
 import './recent-books.css';
@@ -16,7 +16,7 @@ export default function RecentBooks() {
         const requestAPI = async () => {
             try {
                 setLoading(true)
-                const response = await axios.get(GET_DAILY_RSS_BOOK_DATA, {});
+                const response = await instance.get(GET_DAILY_RSS_BOOK_DATA, {});
                 setData(response.data);
                 setLoading(false)
             } catch (err) {

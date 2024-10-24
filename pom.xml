@@ -199,7 +199,6 @@
                                 <copy todir="${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF">
                                     <fileset dir="${project.basedir}/src/main/resources/" includes="rewrite.config"/>
                                 </copy>
-
                             </target>
                         </configuration>
                         <goals>

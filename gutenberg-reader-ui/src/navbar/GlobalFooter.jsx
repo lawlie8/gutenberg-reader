@@ -2,7 +2,7 @@ import Layout from "antd/es/layout/layout";
 import React, { useState, useEffect, version } from 'react';
 import { Footer } from "antd/es/layout/layout";
 import { END_GET_APPLICATION_PROPERTIES } from "../constants";
-import axios from "axios";
+import instance from "../utils/axios";
 
 const footerStyle = {
   textAlign: 'center',
@@ -20,13 +20,12 @@ const footerStyle = {
 
 export default function GlobalFooter() {
   const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+
 
 
   React.useEffect(() => {
-    axios.get(END_GET_APPLICATION_PROPERTIES).then((response) => {
-      setData(response.data);
+    instance.get(END_GET_APPLICATION_PROPERTIES).then((res) => {
+      setData(res.data);
     });
   }, []);
 
