@@ -19,4 +19,9 @@ public class SucessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         response.setStatus(HttpServletResponse.SC_OK);
     }
+
+    @Override
+    protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    }
 }

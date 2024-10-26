@@ -1,7 +1,6 @@
 package com.lawlie8.gutenbergreader.resourceHelpers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.BooksDTO;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.DailyRssBookDto;
 import com.lawlie8.gutenbergreader.DTOs.dailyRssDtos.channel.Channel;
@@ -14,20 +13,11 @@ import com.lawlie8.gutenbergreader.util.XMLReaderUtilService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.spi.LoggerContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

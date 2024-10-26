@@ -1,7 +1,6 @@
 package com.lawlie8.gutenbergreader.config.security;
 
 import com.lawlie8.gutenbergreader.repositories.UserRepo;
-import org.apache.commons.logging.Log;
 import org.junit.jupiter.api.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.session.*;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
@@ -34,11 +35,6 @@ public class SecurityConfiguration{
     @Autowired
     private UserRepo userRepo;
 
-    @Autowired
-    SucessHandler sucessHandler;
-
-    @Autowired
-    FailuerHandler failureHandler;
 
     @Autowired
     LogOutSuccessHandler logOutSuccessHandler;
@@ -63,8 +59,9 @@ public class SecurityConfiguration{
 
                 }).formLogin(httpSecurityFormLoginConfigurer -> {
             httpSecurityFormLoginConfigurer
-                    .successHandler(sucessHandler)
-                    .failureHandler(failureHandler)
+                    .loginPage("/web/logreq")
+                    .successHandler(authenticationSuccessHandler())
+                    .failureHandler(authenticationFailureHandler())
                     .loginProcessingUrl("/web/auth")
                     .usernameParameter("username")
                     .passwordParameter("password")
@@ -77,6 +74,17 @@ public class SecurityConfiguration{
                         .maximumSessions(-1)
                         .expiredSessionStrategy(sessionInformationExpiredStrategy()))*/
                 .build();
+    }
+
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new SucessHandler();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler(){
+        return new FailuerHandler();
     }
 
     @Bean
