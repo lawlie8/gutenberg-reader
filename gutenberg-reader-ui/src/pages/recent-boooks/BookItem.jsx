@@ -6,7 +6,7 @@ import { Image } from 'antd';
 import { MoreOutlined, ReadOutlined, FileZipOutlined, LinkOutlined, BookOutlined } from '@ant-design/icons';
 import Meta from 'antd/es/card/Meta';
 import React from 'react';
-import axios from 'axios';
+import instance from '../../utils/axios';
 import { IMAGE_BLOB_DATA_URL, ZIP_BLOB_DATA_URL, EPUB_BLOB_DATA_URL } from '../../constants';
 export default function BookItem({ title, bookId, author, uploadDate, width }) {
 
@@ -66,7 +66,7 @@ export default function BookItem({ title, bookId, author, uploadDate, width }) {
         React.useEffect(() => {
             if (bookId !== null) {
                 try {
-                    axios.get(IMAGE_BLOB_DATA_URL + `${bookId}`, { responseType: 'blob' })
+                    instance.get(IMAGE_BLOB_DATA_URL + `${bookId}`, { responseType: 'blob' })
                         .then(res => {
                             setImageData(window.URL.createObjectURL(new Blob([res.data])))
                         })

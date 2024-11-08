@@ -3,7 +3,7 @@ import { Link, NavLink, Route, useNavigate, Router, Routes, useLocation, createS
 import React, { useRef } from "react";
 import { LogoutOutlined } from '@ant-design/icons';
 import { END_GET_AUTH_LOGOUT, NAVBAR_SEARCH_API,IMAGE_BLOB_DATA_URL } from '../constants';
-import axios from 'axios';
+import instance from '../utils/axios';
 import './navbar.css'
 export default function GlobalHeader() {
 
@@ -74,7 +74,7 @@ export default function GlobalHeader() {
 
         if (value.length > 0) {
             try {
-                axios.get(NAVBAR_SEARCH_API + `${value}`).then(res => {
+                instance.get(NAVBAR_SEARCH_API + `${value}`).then(res => {
                     setSearchData(res.data);
                 })
             } catch {
@@ -97,7 +97,7 @@ export default function GlobalHeader() {
     }, [searchTerm])
 
     function logutCurrentUser() {
-        axios.post(END_GET_AUTH_LOGOUT, {}, {
+        instance.post(END_GET_AUTH_LOGOUT, {}, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

@@ -1,7 +1,7 @@
 import { Col, List, Menu, notification, Radio, Row, Spin } from "antd";
 import './explore.css'
 import { FETCH_BOOKS_BY_PAGE } from "../../constants";
-import axios from "axios";
+import instance from "../../utils/axios";
 import React, { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BookItem from "../recent-boooks/BookItem";
 import { useInView } from 'react-intersection-observer';
@@ -39,7 +39,7 @@ export default function Explore() {
     try {
       setLoading(true);
 
-      axios.get(FETCH_BOOKS_BY_PAGE + `${page}/10`, {}).then((response) => {
+      instance.get(FETCH_BOOKS_BY_PAGE + `${page}/10`, {}).then((response) => {
         response.data.map((booksData) => {
           setCurrentRenderedBooks(oldArray => [...oldArray, booksData])
         })
