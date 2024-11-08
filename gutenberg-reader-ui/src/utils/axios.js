@@ -14,9 +14,10 @@ function fetchBaseUrl(){
 
 const instance = axios.create({
     baseURL: BASE_URL,
-    headers: new Headers({
-        "ngrok-skip-browser-warning": "69420",
-      }),
+    headers: {
+        "ngrok-skip-browser-warning": "69420"
+    },
+   
 })
 
 instance.interceptors.response.use(
