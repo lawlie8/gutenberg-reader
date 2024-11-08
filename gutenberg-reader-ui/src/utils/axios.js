@@ -13,7 +13,7 @@ function fetchBaseUrl(){
 
 
 const instance = axios.create({
-    baseURL: fetchBaseUrl()
+    baseURL: BASE_URL
 })
 
 instance.interceptors.response.use(
