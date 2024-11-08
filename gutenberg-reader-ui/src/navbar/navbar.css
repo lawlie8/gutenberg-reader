@@ -1,0 +1,24 @@
+.navbar-search{
+    min-width: 40vw;
+    position: relative;
+}
+
+.global-search-list{
+    position: fixed;
+    z-index: 24;
+    top: 35px;
+    width: 40vw;
+    background-color: white;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border: 1px solid black;
+}
+
+.logout-icon-grp{
+    position: fixed;
+    left: 100%;
+    transform: translate(-100%);
+    z-index: 24;
+    padding-right: 20px;
+}
+

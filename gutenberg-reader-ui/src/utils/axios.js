@@ -4,7 +4,7 @@ import { notification } from "antd";
 
 function fetchBaseUrl(){
     console.log('Checking url');
-    axios.get("https://www.redirectcheck.org/api/check?url=http%3A%2F%2Freader.lawlie8.org").then((response) =>{
+    axios.get("https://www.redirectcheck.org/api/check?url=http%3A%2F%2Freader-api.lawlie8.org").then((response) =>{
         return response.data.data.final_result.final_url
     }).catch((error)=> {
         console.log(error);
