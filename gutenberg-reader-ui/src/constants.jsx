@@ -1,4 +1,4 @@
-export const BASE_URL = "https://reader.lawlie8.org";
+export const BASE_URL = "https://safe-expert-airedale.ngrok-free.app";
 export const END_GET_APPLICATION_PROPERTIES = "/web/application/properties/version";
 export const END_GET_AUTH_LOGIN = '/web/auth';
 export const END_GET_AUTH_SIGNUP = '/web/signup';
