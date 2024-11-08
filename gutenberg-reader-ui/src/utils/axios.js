@@ -33,6 +33,8 @@ instance.interceptors.response.use(
 
     return response
     },error =>{
+        console.log(error);
+        
         if(error.response.status === 403){
             notification.error({
             message:error.response.code,
